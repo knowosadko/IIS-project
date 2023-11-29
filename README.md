@@ -7,3 +7,6 @@ Directory for storing script files for the system
 
 ### Data
 Directory for storing data for training the models
+
+### Models
+Dictionary for storing trained models
