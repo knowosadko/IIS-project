@@ -1,3 +1,6 @@
-# IIS-project
-## Project for the Intelligent Interactive Systems (IIS)-A Virtual Bartender Experience with Furhat
+# IIS-project - A Virtual Bartender Experience with Furhat
+## Project for the Intelligent Interactive Systems (IIS)
 A virtual robot that adapts its behavior based on the emotions of users.
+
+### Scripts
+Directory for storing script files for the system
