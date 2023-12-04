@@ -9,7 +9,7 @@ def loadTrainingData(data_path):
     categories = os.listdir(data_path)
 
     labels = []
-    aus_data = []
+    data = []
 
     counter = 0
 
@@ -17,20 +17,27 @@ def loadTrainingData(data_path):
         img_path = os.path.join(data_path, categorie)
         images = os.listdir(img_path)
         for file in images:
-            if counter == 1: # Remove when testing done
+            if counter == 5: # Remove when testing done
                 break
             file_path = os.path.join(img_path,file)
-            # replace with detector
 
             detector = Detector(device="cuda")
-            data = detector.detect_image(file_path)
+            aus_data = detector.detect_image(file_path)
 
+            if len(data) == 0:
+                columnNames = aus_data.au_columns
             labels.append(categorie)
-            aus_data.append(data.aus)
+            data.append(aus_data.loc[0].aus.values.flatten().tolist())
 
-            counter = 1
+            counter += 1
 
-    return labels, aus_data
+        print(columnNames)
+        labelset = pd.DataFrame(np.array(labels), columns=["emotion"])
+
+        # convert to pandas format
+        dataset = pd.DataFrame(np.array(data), columns=columnNames)
+
+    return labelset, dataset
 
 def train_models(data):
     # Function for training modules on train data
@@ -46,9 +53,9 @@ def main():
 
     #Training
     labels, data = loadTrainingData(os.path.join(path,"Data","DiffusionFER","DiffusionEmotion_S","cropped"))
+    print(labels)
     print(data)
 
-    #aus = pd.read_csv(os.path.join(path,"processed","aus.csv")) # Should be real time for final version
 
 if __name__ == "__main__":
     main()
