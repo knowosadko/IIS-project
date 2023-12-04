@@ -53,8 +53,7 @@ def main():
 
     #Training
     labels, data = loadTrainingData(os.path.join(path,"Data","DiffusionFER","DiffusionEmotion_S","cropped"))
-    print(labels)
-    print(data)
+    
 
 
 if __name__ == "__main__":
