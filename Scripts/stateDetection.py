@@ -36,6 +36,12 @@ def loadTrainingData(data_path):
 
     return labelset, dataset
 
+def loadTrainingCSV(data_path,label_path):
+    dataset = pd.read_csv(data_path)
+    labelset = pd.read_csv(label_path)
+
+    return labelset, dataset
+
 def train_models(data):
     # Function for training modules on train data
     ...
@@ -49,11 +55,11 @@ def main():
     path = os. getcwd()
 
     #Training Data
-    labels, data = loadTrainingData(os.path.join(path,"Data","DiffusionFER","DiffusionEmotion_S","cropped"))
-    data.to_csv(os.path.join(path,"Data","trainAUs.csv"),index=False)
-    labels.to_csv(os.path.join(path,"Data","trainLabels.csv"),index=False)
-    
-
+    #labels, data = loadTrainingData(os.path.join(path,"Data","DiffusionFER","DiffusionEmotion_S","cropped"))
+    #data.to_csv(os.path.join(path,"Data","trainAUs.csv"),index=False)
+    #labels.to_csv(os.path.join(path,"Data","trainLabels.csv"),index=False)
+    labels, data = loadTrainingCSV(os.path.join(path,"Data","trainAUs.csv"), os.path.join(path,"Data","trainLabels.csv"))
+    print(data)
 
 if __name__ == "__main__":
     main()
