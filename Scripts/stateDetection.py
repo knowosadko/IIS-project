@@ -11,24 +11,23 @@ def loadTrainingData(data_path):
     labels = []
     data = []
 
-    counter = 0
     detector = Detector(device="cuda")
 
     for categorie in categories:
         img_path = os.path.join(data_path, categorie)
         images = os.listdir(img_path)
+
         for file in images:
             file_path = os.path.join(img_path,file)
 
             aus_data = detector.detect_image(file_path)
 
             if (aus_data.dropna().shape[0] != 0): # Only store detected faces
-                if len(data) == 0: # Get columns
+                if len(data) == 0: # Get columns only once
                     columnNames = aus_data.au_columns
                 
                 labels.append(categorie)
                 data.append(aus_data.loc[0].aus.values.flatten().tolist())
-
 
         labelset = pd.DataFrame(np.array(labels), columns=["emotion"])
 
