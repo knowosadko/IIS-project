@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from joblib import dump, load
 from feat import Detector
+from sklearn.model_selection import train_test_split
 
 def loadTrainingData(data_path):
     # Function for loading a dictinary of images as inpuit data (Used for training)
@@ -42,12 +43,17 @@ def loadTrainingCSV(data_path,label_path):
 
     return labelset, dataset
 
-def train_models(data):
-    # Function for training modules on train data
+def splitTrainValTest(data, labels, sizeTest, sizeVal):
+    # Function for spliting data into training, validation and test sets
+    data_in, test_in, data_out, test_out = train_test_split(data, labels, test_size=sizeTest, stratify=labels)
+    train_in, val_in, train_out, val_out = train_test_split(data_in, data_out, test_size=(sizeVal/(1-sizeTest)), stratify=data_out)
+    return train_in, train_out, val_in, val_out, test_in, test_out 
+
+def train_models(train_data, train_labels, val_data, val_labels):
     ...
 
 def use_model(data, modelPath):
-    # Function for using premade model to classify AUS data
+    # Function for using trained model to classify AUS data
     module = load(modelPath)
     predictions = module.predict(data)
 
@@ -59,7 +65,9 @@ def main():
     #data.to_csv(os.path.join(path,"Data","trainAUs.csv"),index=False)
     #labels.to_csv(os.path.join(path,"Data","trainLabels.csv"),index=False)
     labels, data = loadTrainingCSV(os.path.join(path,"Data","trainAUs.csv"), os.path.join(path,"Data","trainLabels.csv"))
-    print(data)
+    
+    train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
+    print(train)
 
 if __name__ == "__main__":
     main()
