@@ -12,26 +12,24 @@ def loadTrainingData(data_path):
     data = []
 
     counter = 0
+    detector = Detector(device="cuda")
 
     for categorie in categories:
         img_path = os.path.join(data_path, categorie)
         images = os.listdir(img_path)
         for file in images:
-            if counter == 5: # Remove when testing done
-                break
             file_path = os.path.join(img_path,file)
 
-            detector = Detector(device="cuda")
             aus_data = detector.detect_image(file_path)
 
-            if len(data) == 0:
-                columnNames = aus_data.au_columns
-            labels.append(categorie)
-            data.append(aus_data.loc[0].aus.values.flatten().tolist())
+            if (aus_data.dropna().shape[0] != 0): # Only store detected faces
+                if len(data) == 0: # Get columns
+                    columnNames = aus_data.au_columns
+                
+                labels.append(categorie)
+                data.append(aus_data.loc[0].aus.values.flatten().tolist())
 
-            counter += 1
 
-        print(columnNames)
         labelset = pd.DataFrame(np.array(labels), columns=["emotion"])
 
         # convert to pandas format
@@ -51,8 +49,10 @@ def use_model(data, modelPath):
 def main():
     path = os. getcwd()
 
-    #Training
+    #Training Data
     labels, data = loadTrainingData(os.path.join(path,"Data","DiffusionFER","DiffusionEmotion_S","cropped"))
+    data.to_csv(os.path.join(path,"Data","trainAUs.csv"),index=False)
+    labels.to_csv(os.path.join(path,"Data","trainLabels.csv"),index=False)
     
 
 
