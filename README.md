@@ -4,6 +4,8 @@ A virtual robot that adapts its behavior based on the emotions of users.
 
 IIS-project
 ├── Data
+|   ├── trainAUs.csv
+|   ├── trainLabels.csv
 |   └── DiffusionFER
 |       └── DiffusionEmotion_S
 |           └── cropped
@@ -16,14 +18,20 @@ IIS-project
 └── Scripts
     └──stateDetection.py
 
-### Scripts
+## Scripts
 Directory for storing script files for the system
 
-### Data
+## Data
 Directory for storing data for training the models
 
-#### DiffusionFER
+### DiffusionFER
 Directory containing the DiffusionFER dataset (not included in the git because of size, source https://huggingface.co/datasets/FER-Universe/DiffusionFER)
 
-### Models
+### trainAUs.csv
+CSV file storing Action Units detected in images in DiffusionFER
+
+### trainLabels.csv
+CSV file storing Labels for the trainAUs.csv
+
+## Models
 Dictionary for storing trained models
