@@ -3,7 +3,15 @@ import numpy as np
 import pandas as pd
 from joblib import dump, load
 from feat import Detector
+from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
+
+import warnings
+
 
 def loadTrainingData(data_path):
     # Function for loading a dictinary of images as inpuit data (Used for training)
@@ -49,8 +57,11 @@ def splitTrainValTest(data, labels, sizeTest, sizeVal):
     train_in, val_in, train_out, val_out = train_test_split(data_in, data_out, test_size=(sizeVal/(1-sizeTest)), stratify=data_out)
     return train_in, train_out, val_in, val_out, test_in, test_out 
 
-def train_models(train_data, train_labels, val_data, val_labels):
-    ...
+def train_models(model,train_data, train_labels, val_data, val_labels):
+    model.fit(train_data, train_labels)
+    predicted_val = model.predict(val_data)
+
+    return accuracy_score(val_labels, predicted_val)
 
 def use_model(data, modelPath):
     # Function for using trained model to classify AUS data
@@ -68,6 +79,44 @@ def main():
     
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
     print(train)
+    model = SVC()
+    model1_accuracy = train_models(model,train,train_labels,val,val_labels)
+    print("SVC accuracy")
+    print(model1_accuracy)
+
+    model2 = sgd_clf = SGDClassifier(random_state=42, max_iter=1000, tol=1e-3)
+    model2_accuracy = train_models(model2,train,train_labels,val,val_labels)
+    print("SGDC accuracy")
+    print(model2_accuracy)
+
+    model3 = KNeighborsClassifier()
+    model3_accuracy = train_models(model3,train,train_labels,val,val_labels)
+    print("Nearest neighbors accuracy")
+    print(model3_accuracy)
+
+    param_grid = [
+        {"kernel": ["poly"], "degree": [1,2,3, 10, 15, 20]},
+        {"kernel": ["linear"]},
+        {"kernel": ["rbf"], "gamma": [1,2,3, 10, 15, 20]},
+        {"kernel": ["sigmoid"], "coef0": [1,2,3, 10, 15, 20]}
+    ]
+
+
+    # param_grid = [
+    #     {"kernel": ["poly"], "degree": [3, 10, 15]},
+    # ]
+
+
+    best_model = GridSearchCV(SVC(), param_grid)
+
+
+    accuracy = train_models(best_model,train,train_labels,val,val_labels)
+    print(
+        "Best parameters of best model: ",
+        best_model.best_params_
+    )
+    print(accuracy)
 
 if __name__ == "__main__":
+    warnings.filterwarnings("ignore")
     main()
