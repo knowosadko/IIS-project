@@ -1,7 +1,9 @@
 import os
+import time
 import numpy as np
 import pandas as pd
-from joblib import dump, load
+from joblib import dump
+from joblib import load as load_
 from feat import Detector
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import train_test_split
@@ -57,16 +59,35 @@ def splitTrainValTest(data, labels, sizeTest, sizeVal):
     train_in, val_in, train_out, val_out = train_test_split(data_in, data_out, test_size=(sizeVal/(1-sizeTest)), stratify=data_out)
     return train_in, train_out, val_in, val_out, test_in, test_out 
 
-def train_models(model,train_data, train_labels, val_data, val_labels):
+def train_models(model,train_data, train_labels, val_data, val_labels, param_grid=[]):
+
+    if (len(param_grid) > 0):
+        model = GridSearchCV(model, param_grid)
+
     model.fit(train_data, train_labels)
-    predicted_val = model.predict(val_data)
 
-    return accuracy_score(val_labels, predicted_val)
+    if (len(param_grid) > 0):
+        tic = time.time()
+        predicted_val = model.best_estimator_.predict(val_data)
+    else:
+        tic = time.time()
+        predicted_val = model.predict(val_data)
+    toc = time.time()
+    process_time = toc - tic
+    accuracy = accuracy_score(predicted_val, val_labels)
 
-def use_model(data, modelPath):
+    return model, accuracy, process_time
+
+def use_model(modelPath, data, labels):
     # Function for using trained model to classify AUS data
-    module = load(modelPath)
+
+    module = load_(modelPath)
+    tic = time.time()
     predictions = module.predict(data)
+    toc = time.time()
+    process_time = toc - tic
+    accuracy = accuracy_score(predictions, labels)
+    return predictions, accuracy, process_time
 
 def main():
     path = os. getcwd()
@@ -78,44 +99,56 @@ def main():
     labels, data = loadTrainingCSV(os.path.join(path,"Data","trainAUs.csv"), os.path.join(path,"Data","trainLabels.csv"))
     
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
-    print(train)
-    model = SVC()
-    model1_accuracy = train_models(model,train,train_labels,val,val_labels)
-    print("SVC accuracy")
-    print(model1_accuracy)
+
+    model1, model1_accuracy, model1_time = train_models(SVC(),train,train_labels,val,val_labels)
+    print(f"Model: SVC \n Accuracy: {model1_accuracy} \n Time: {model1_time} s\n")
 
     model2 = sgd_clf = SGDClassifier(random_state=42, max_iter=1000, tol=1e-3)
-    model2_accuracy = train_models(model2,train,train_labels,val,val_labels)
-    print("SGDC accuracy")
-    print(model2_accuracy)
+    model2, model2_accuracy, model2_time = train_models(model2,train,train_labels,val,val_labels)
+    print(f"Model: SG \n Accuracy: {model2_accuracy} \n Time: {model2_time} s\n")
 
     model3 = KNeighborsClassifier()
-    model3_accuracy = train_models(model3,train,train_labels,val,val_labels)
-    print("Nearest neighbors accuracy")
-    print(model3_accuracy)
+    model3, model3_accuracy, model3_time = train_models(model3,train,train_labels,val,val_labels)
+    print(f"Model: Nearest neighbors \n Accuracy: {model3_accuracy} \n Time: {model3_time} s\n")
 
+    #Model: SVC 
+    #Accuracy: 0.62890625
+    #Time: 0.012627601623535156 s
+
+    #Model: SG
+    #Accuracy: 0.6015625
+    #Time: 0.0009980201721191406 s
+
+    #Model: Nearest neighbors 
+    #Accuracy: 0.57421875
+    #Time: 0.11684870719909668 s
+
+    # SVC best performance and decent time
+
+    # Vector tuning Support Vector Classification
     param_grid = [
-        {"kernel": ["poly"], "degree": [1,2,3, 10, 15, 20]},
         {"kernel": ["linear"]},
-        {"kernel": ["rbf"], "gamma": [1,2,3, 10, 15, 20]},
-        {"kernel": ["sigmoid"], "coef0": [1,2,3, 10, 15, 20]}
+        {"kernel": ["poly"], "degree": [1,2,3, 5, 10], "gamma": ["scale","auto",0,0.5,1,5,10,20], "coef0": [0,1]},
+        {"kernel": ["rbf"], "gamma": ["scale","auto",0,0.5,1,5,10,20]},
+        {"kernel": ["sigmoid"], "gamma": ["scale","auto",0,0.5,1,5,10,20], "coef0": [0,1]}
     ]
+    best_model, best_model_accuracy, best_model_time = train_models(SVC(),train,train_labels,val,val_labels,param_grid)
+    print(f"Best parameters of SVC: {best_model.best_params_}\n Accuracy: {best_model_accuracy} \n Time: {best_model_time} s\n")
+    #Accuracy: 0.625
+    #Time: 0.003987789154052734 s
 
+    # Save model
+    model_path = os.path.join(path, "Models", "SVC2.joblib")
 
-    # param_grid = [
-    #     {"kernel": ["poly"], "degree": [3, 10, 15]},
-    # ]
+    dump(best_model.best_estimator_, model_path)
+    # Validate on testset
+    presictions, accuracy, time_ = use_model(model_path, test, test_labels)
+    print(f"On test set: \n\t Accuracy: {accuracy}\n\t Time: {time_}")
 
-
-    best_model = GridSearchCV(SVC(), param_grid)
-
-
-    accuracy = train_models(best_model,train,train_labels,val,val_labels)
-    print(
-        "Best parameters of best model: ",
-        best_model.best_params_
-    )
-    print(accuracy)
+    # SCV1.joblib
+    #Parameters: {'coef0': 1, 'degree': 2, 'gamma': 0.5, 'kernel': 'poly'}
+    #Accuracy: 0.640625
+    #Time: 0.0032041072845458984
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
