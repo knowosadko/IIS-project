@@ -15,13 +15,11 @@ A virtual robot that adapts its behavior based on the emotions of users.
 |               ├── happy
 |               ├── sad
 |               └── surprise
-├── Scripts
-|   └── stateDetection.py
-└── Models
-    └── SVC1.joblib
+├── Models
+|   └── SVC1.joblib
+└── Scripts
+    └── stateDetection.py
 ```
-## Scripts
-Directory for storing script files for the system
 
 ## Data
 Directory for storing data for training the models
@@ -40,3 +38,9 @@ Dictionary for storing trained models
 
 ### SVC1.joblib
 Support Vector Classification model ('coef0': 1, 'degree': 2, 'gamma': 0.5, 'kernel': 'poly') Accuracy: 0.640625
+
+## Scripts
+Directory for storing script files for the system
+
+### stateDetection
+Script for training models
