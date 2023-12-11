@@ -2,7 +2,7 @@
 Project for the Intelligent Interactive Systems (IIS)
 A virtual robot that adapts its behavior based on the emotions of users.
 
-'''
+```bash
 ├── Data
 |   ├── trainAUs.csv
 |   ├── trainLabels.csv
@@ -17,7 +17,7 @@ A virtual robot that adapts its behavior based on the emotions of users.
 |               └── surprise
 └── Scripts
     └──stateDetection.py
-'''
+```
 ## Scripts
 Directory for storing script files for the system
 
