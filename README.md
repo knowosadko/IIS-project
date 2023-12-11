@@ -2,9 +2,9 @@
 Project for the Intelligent Interactive Systems (IIS)
 A virtual robot that adapts its behavior based on the emotions of users.
 
-IIS-project
+$ tree
+.
 ├── Data
-
 |   ├── trainAUs.csv
 |   ├── trainLabels.csv
 |   └── DiffusionFER
