@@ -15,8 +15,10 @@ A virtual robot that adapts its behavior based on the emotions of users.
 |               ├── happy
 |               ├── sad
 |               └── surprise
-└── Scripts
-    └──stateDetection.py
+├── Scripts
+|   └── stateDetection.py
+└── Models
+    └── SVC1.joblib
 ```
 ## Scripts
 Directory for storing script files for the system
