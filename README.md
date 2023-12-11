@@ -3,6 +3,7 @@ Project for the Intelligent Interactive Systems (IIS)
 A virtual robot that adapts its behavior based on the emotions of users.
 
 IIS-project
+.
 ├── Data
 |   ├── trainAUs.csv
 |   ├── trainLabels.csv
@@ -35,3 +36,6 @@ CSV file storing Labels for the trainAUs.csv
 
 ## Models
 Dictionary for storing trained models
+
+### SVC1.joblib
+Support Vector Classification model ('coef0': 1, 'degree': 2, 'gamma': 0.5, 'kernel': 'poly') Accuracy: 0.640625
