@@ -78,19 +78,26 @@ def train_models(model,train_data, train_labels, val_data, val_labels, param_gri
 
     return model, accuracy, process_time
 
-def use_model(modelPath, data, labels):
-    # Function for using trained model to classify AUS data
+def store_model(model, modelName):
+    modelPath = os.path.join(os.getcwd(), "Models", modelName)
+    dump(model, model_path)
 
-    module = load_(modelPath)
+def load_model(modelName):
+    modelPath = os.path.join(os.getcwd(), "Models", modelName)
+    return load_(modelPath)
+
+def evaluate_model(model, data, labels):
+    # Function for evalating trained model on test data
+
     tic = time.time()
-    predictions = module.predict(data)
+    predictions = model.predict(data)
     toc = time.time()
     process_time = toc - tic
     accuracy = accuracy_score(predictions, labels)
     return predictions, accuracy, process_time
 
 def main():
-    path = os. getcwd()
+    path = os.getcwd()
 
     #Training Data
     #labels, data = loadTrainingData(os.path.join(path,"Data","DiffusionFER","DiffusionEmotion_S","cropped"))
@@ -138,11 +145,12 @@ def main():
     #Time: 0.003987789154052734 s
 
     # Save model
-    model_path = os.path.join(path, "Models", "SVC2.joblib")
+    modelName = "SVC2.joblib"
+    store_model(best_model.best_estimator_, modelName)
 
-    dump(best_model.best_estimator_, model_path)
     # Validate on testset
-    presictions, accuracy, time_ = use_model(model_path, test, test_labels)
+    model = load_model(modelName)
+    presictions, accuracy, time_ = evaluate_model(model, test, test_labels)
     print(f"On test set: \n\t Accuracy: {accuracy}\n\t Time: {time_}")
 
     # SCV1.joblib
