@@ -5,11 +5,14 @@ import pandas as pd
 from joblib import dump
 from joblib import load as load_
 from feat import Detector
-from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
+from sklearn.linear_model import SGDClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 
 import warnings
@@ -107,6 +110,10 @@ def main():
     
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
 
+    main1(train, train_labels, val, val_labels, test, test_labels)
+    #main2(train, train_labels, val, val_labels, test, test_labels)
+
+def main1(train, train_labels, val, val_labels, test, test_labels):
     model1, model1_accuracy, model1_time = train_models(SVC(),train,train_labels,val,val_labels)
     print(f"Model: SVC \n Accuracy: {model1_accuracy} \n Time: {model1_time} s\n")
 
@@ -114,24 +121,27 @@ def main():
     model2, model2_accuracy, model2_time = train_models(model2,train,train_labels,val,val_labels)
     print(f"Model: SG \n Accuracy: {model2_accuracy} \n Time: {model2_time} s\n")
 
-    model3 = KNeighborsClassifier()
-    model3, model3_accuracy, model3_time = train_models(model3,train,train_labels,val,val_labels)
+    model3, model3_accuracy, model3_time = train_models(KNeighborsClassifier(),train,train_labels,val,val_labels)
     print(f"Model: Nearest neighbors \n Accuracy: {model3_accuracy} \n Time: {model3_time} s\n")
 
-    #Model: SVC 
-    #Accuracy: 0.62890625
-    #Time: 0.012627601623535156 s
+    model4, model4_accuracy, model4_time = train_models(DecisionTreeClassifier(), train, train_labels, val, val_labels)
+    print(f"Model: tree \n Accuracy: {model4_accuracy} \n Time: {model4_time} s\n")
 
-    #Model: SG
-    #Accuracy: 0.6015625
-    #Time: 0.0009980201721191406 s
+    model5, model5_accuracy, model5_time = train_models(RandomForestClassifier(), train, train_labels, val, val_labels)
+    print(f"Model: randomforest \n Accuracy: {model5_accuracy} \n Time: {model5_time} s\n")
 
-    #Model: Nearest neighbors 
-    #Accuracy: 0.57421875
-    #Time: 0.11684870719909668 s
+    model6, model6_accuracy, model6_time = train_models(GaussianProcessClassifier(), train, train_labels, val, val_labels)
+    print(f"Model: gausian \n Accuracy: {model6_accuracy} \n Time: {model6_time} s\n")
 
-    # SVC best performance and decent time
+    #SVC Accuracy: 0.6015625 Time: 0.013618230819702148 s
+    #SG  Accuracy: 0.5859375 Time: 0.0019192695617675781 s
+    #Nearest neighbors  Accuracy: 0.5546875 Time: 0.12466597557067871 s
+    #tree Accuracy: 0.484375 Time: 0.0010335445404052734 s
+    #randomforest  Accuracy: 0.62109375 Time: 0.0064849853515625 s
+    #gausian Accuracy: 0.59765625 Time: 0.28975892066955566 s
 
+    
+def main2(train, train_labels, val, val_labels, test, test_labels):
     # Vector tuning Support Vector Classification
     param_grid = [
         {"kernel": ["linear"]},
@@ -157,6 +167,7 @@ def main():
     #Parameters: {'coef0': 1, 'degree': 2, 'gamma': 0.5, 'kernel': 'poly'}
     #Accuracy: 0.640625
     #Time: 0.0032041072845458984
+
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
