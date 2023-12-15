@@ -13,7 +13,7 @@ A virtual robot that adapts its behavior based on the emotions of users.
 |   |           ├── disgust
 |   |           ├── fear
 |   |           ├── happy
-|               ├── neutral
+|   |           ├── neutral
 |   |           ├── sad
 |   |           └── surprise
 |   └── multiEmoCrop
