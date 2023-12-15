@@ -1,4 +1,5 @@
 from time import sleep
+import random
 from furhat_remote_api import FurhatRemoteAPI
 from numpy.random import randint
 
@@ -106,120 +107,141 @@ def set_persona(persona):
 def bsay(line):
     furhat.say(text=line, blocking=True)
 
+def emotion_categorizer(emote):
+    if emote == "angry" or "disgust" or "fear" or "sad":
+        return "negative"
+    elif emote == "happy":
+        return "positive"
+    else:
+        return "neutral"
+ 
 def main_tree():
     set_persona('Amany')
     furhat.set_voice(name='Matthew')
     
     current_emotion = "currentEmotion"
-    match current_emotion:
-        case "Angry":
-            first_angry()
-        case "Disgust":
-            first_disgust()
-        case "Fear":
-            first_fear()
-        case "Happy":
-            print("placeholder")
-        case "Neutral":
-            print("placeholder")
-        case "Sad":
-            print("placeholder")
-        case "Surprised":
-            print("placeholder")
+    current_emotion_categorized = emotion_categorizer("current_emotion")
+    match current_emotion_categorized:
+        case "positive":
+            first_pos()
+        case "negative":
+            first_neg()
+        case "neutral":
+            first_pos()
 
-def first_angry():
-    furhat.say(text = "Hello! how are you today? You seem kind of frustrated")
+def first_pos():
+    bsay("Hello! how are you today? You seem kind of happy, am i wrong?")
     while True:
         # Speak and listen
         result = furhat.listen()
         message_lower = result.message.lower()
-        
-        if "good" in message_lower:
-            furhat.say(text ="Oh okay, My mistake then. Can i offer you something? ")
-        elif "bad" in message_lower:
-             furhat.say(text ="Im sorry, can i offer you a drink to cheer you up?")
-             #TODO: add yes or no etc blabla
+        if "yes" in message_lower:
+            mistake_pos()
+        elif "no" in message_lower:
+            second_pos()
              
-def first_disgust():
-    furhat.say(text = "Hello! how are you today? You seem kind of out of place")
+def first_neg():
+    bsay("Hello! how are you today? You seem kind of sad, am i wrong?")
     while True:
         # Speak and listen
         result = furhat.listen()
         message_lower = result.message.lower()
-        
-        if "good" in message_lower:
-            furhat.say(text ="Oh okay, My mistake then. Can i offer you something?")
-        elif "bad" in message_lower:
-            furhat.say(text ="Im sorry, can i offer you a drink to cheer you up?")
-            #TODO: add yes or no etc blabla
-            
-def first_fear():
-    furhat.say(text = "Hello! how are you today? You seem kind of scared")
+        if "yes" in message_lower:
+            mistake_neg()
+        elif "no" in message_lower:
+            second_neg()
+             
+def mistake_pos():
+    bsay("my mistake, are you sad?")
     while True:
         # Speak and listen
         result = furhat.listen()
         message_lower = result.message.lower()
-        
-        if "good" in message_lower:
-            furhat.say(text ="Oh okay, My mistake then. Can i offer you something?")
-        elif "bad" in message_lower:
-            furhat.say(text ="Dont be scared, can i offer you a drink to make you feel more comfortable?")
-            #TODO: add yes or no etc blabla
+        if "yes" in message_lower:
+            mistake_pos()
+        elif "no" in message_lower:
+            first_neutral()
+             
+def mistake_neg():
+    bsay("my mistake, are you happy?")
+    while True:
+        # Speak and listen
+        result = furhat.listen()
+        message_lower = result.message.lower()
+        if "yes" in message_lower:
+            mistake_pos()
+        elif "no" in message_lower:
+            first_neutral()
+             
+def second_pos():
+    bsay("Thats Great! Feeling happy is awesome. Can i offer you a drink?")
+    while True:
+        # Speak and listen
+        result = furhat.listen()
+        message_lower = result.message.lower()
+        if "yes" in message_lower:
+            drink_emotion()
+        elif "no" in message_lower:
+            no_drink()
     
-def first_happy():
-    furhat.say(text = "Hello! how are you today? You seem happy")
+def second_neg():
+    bsay("We all have our ups and downs. Can i offer you a drink to perhaps make you feel better?")
     while True:
         # Speak and listen
         result = furhat.listen()
         message_lower = result.message.lower()
-        
-        if "good" in message_lower:
-            furhat.say(text ="That makes me glad. Can i offer you a drink?")
-        elif "bad" in message_lower:
-            furhat.say(text ="Huh, you dont seem like youre down. Can i offer you a drink to make you feel better?")
-            #TODO: add yes or no etc blabla
-
+        if "yes" in message_lower:
+            drink_emotion()
+        elif "no" in message_lower:
+            no_drink()
+    
 def first_neutral():
-    furhat.say(text = "Hello! how are you today?")
+    bsay("I understand. you are neither sad or happy. Thats ok. Can i offer you a drink to perhaps make you happy?")
     while True:
         # Speak and listen
         result = furhat.listen()
         message_lower = result.message.lower()
-        
-        if "good" in message_lower:
-            furhat.say(text ="That makes me glad. Can i offer you a drink?")
-        elif "bad" in message_lower:
-            furhat.say(text ="Can i offer you a drink to make you feel better?")
-            #TODO: add yes or no etc blabla
-
-def first_sad():
-    furhat.say(text = "Hello! how are you today? You seem kind of sad")
+        if "yes" in message_lower:
+            drink_emotion()
+        elif "no" in message_lower:
+            no_drink()
+    
+def no_drink():
+    bsay("What are you doing in a bar then? Either leave or have a drink. Are you sure you dont want to have a drink?")
     while True:
         # Speak and listen
         result = furhat.listen()
         message_lower = result.message.lower()
-        
-        if "good" in message_lower:
-            furhat.say(text ="Oh okay, My mistake then. Can i offer you a drink?")
-        elif "bad" in message_lower:
-            furhat.say(text ="Dont be sad. Let me offer you a drink to make you feel better.")
-            #TODO: add yes or no etc blabla
-            
-def first_surprised():
-    furhat.say(text = "Hello! how are you today? You seem surprised")
+        if "yes" in message_lower:
+            no_drink()
+        elif "no" in message_lower:
+            drink_emotion()
+    
+    
+def drink_emotion():
+    bsay("Okay, let me take a look at you and try to figure our how youre feeling currently....")
+    sleep(2.5)
+    drink_offer()
+    
+def drink_offer():
+    #TODO: ADD A FUNCTION TO GET EMOTION IDK HOW WE ARE SUPPOSED TO GET IT IN THE FIRST PLACE SO I WAIT WITH IT.
+    emotion_seven = "placeholder"
+    cocktails = ["Mojito", "Moscow Mule", "Aperol", "Martini", "Daiquiri", "Margarita", "Negroni"]
+    cocktail = random.choice(cocktails)
+    bsay("Ill offer you our special ", emotion_seven, " ", cocktail, " That you will not find anywhere else. Would you like that?" )
     while True:
         # Speak and listen
         result = furhat.listen()
         message_lower = result.message.lower()
-        
-        if "good" in message_lower:
-            furhat.say(text ="Can i offer you a drink?") #TODO: what do you say if someone is surprised
-        elif "bad" in message_lower:
-            furhat.say(text ="Let me offer you a drink to make you feel better.")
-            #TODO: add yes or no etc blabla
+        if "yes" in message_lower:
+            drink_accepted()
+        elif "no" in message_lower:
+            drink_emotion()
 
-
-   
+def drink_accepted():
+    bsay("Great")
+    
+    
     
 
 if __name__ == '__main__':
