@@ -62,7 +62,7 @@ def proc_image(categories,img_name):
                             real_emotion = "neutral"
                 # print(real_emotion)
                 # print(prediction_emotion_value[ind_emotion])
-                if prediction_emotion_value[ind_emotion] > 0.8: #save image only if the emotion score is above 0.8
+                if prediction_emotion_value[ind_emotion] > 0.9: #save image only if the emotion score is above 0.9
                     img_save = str(i) + "_" + img_name
                     # print(os.path.join(path,real_emotion,img_save))
                     iio.imwrite(os.path.join(path,real_emotion,img_save),crop)
@@ -70,18 +70,17 @@ def proc_image(categories,img_name):
 
 
 
-warnings.filterwarnings("ignore")
+def main():
 
-path = os.path.join(os.getcwd(),"Data","multiEmoCrop")
-img_categories = os.listdir(os.path.join(path,"img_to_treat"))
-print(img_categories)
-for cat in img_categories:
-    img_list = os.listdir(os.path.join(path,"img_to_treat",cat))
-    for img in img_list:
-        
-        proc_image(cat,img)
-        #  print(os.path.join(path,"img_to_treat",cat, img))
-         
-    # print(img_list)
-# print(os.path.join(path,img_categories[0], img_list[1]))
+    path = os.path.join(os.getcwd(),"Data","multiEmoCrop")
+    img_categories = os.listdir(os.path.join(path,"img_to_treat"))
+    print(img_categories)
+    for cat in img_categories:
+        img_list = os.listdir(os.path.join(path,"img_to_treat",cat))
+        for img in img_list:
+            proc_image(cat,img)
+            
 
+if __name__ == "__main__":
+    warnings.filterwarnings("ignore")
+    main()
