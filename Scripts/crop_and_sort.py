@@ -15,7 +15,7 @@ emotion_list = ["anger","disgust","fear","happiness","sadness","surprise","neutr
 
 
 def proc_image(categories,img_name):
-    path = os.getcwd()
+    path = os.path.join(os.getcwd(),"Data")
     fp = os.path.join(path,"img_to_treat",categories, img_name)
     image = iio.imread(fp)
 
@@ -70,7 +70,7 @@ def proc_image(categories,img_name):
 
 
 warnings.filterwarnings("ignore")
-path = os.getcwd()
+path = os.path.join(os.getcwd(),"Data")
 img_categories = os.listdir(os.path.join(path,"img_to_treat"))
 # print(img_categories)
 for cat in img_categories:
