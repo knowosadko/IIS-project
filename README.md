@@ -6,15 +6,26 @@ A virtual robot that adapts its behavior based on the emotions of users.
 ├── Data
 |   ├── trainAUs.csv
 |   ├── trainLabels.csv
-|   └── DiffusionFER
-|       └── DiffusionEmotion_S
-|           └── cropped
+|   ├── DiffusionFER
+|   |   └── DiffusionEmotion_S
+|   |       └── cropped
+|   |           ├── angry
+|   |           ├── disgust
+|   |           ├── fear
+|   |           ├── happy
+|               ├── neutral
+|   |           ├── sad
+|   |           └── surprise
+|   └── multiEmoCrop
 |               ├── angry
 |               ├── disgust
 |               ├── fear
 |               ├── happy
+|               ├── img_to_treat
+|               ├── neutral
 |               ├── sad
 |               └── surprise
+|
 ├── Models
 |   └── SVC1.joblib
 └── Scripts
@@ -26,6 +37,8 @@ Directory for storing data for training the models
 
 ### DiffusionFER
 Directory containing the DiffusionFER dataset (not included in the git because of size, source https://huggingface.co/datasets/FER-Universe/DiffusionFER)
+
+### multiEmoCrop
 
 ### trainAUs.csv
 CSV file storing Action Units detected in images in DiffusionFER
