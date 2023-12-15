@@ -32,8 +32,11 @@ A virtual robot that adapts its behavior based on the emotions of users.
 ```
 ## Resources
 Microsoft Azure Speech services, it works better than google, has lower WER (word error rate).
+
 Configuration in Web interface->Settings->Recognizer:
+
 Region: North-europe
+
 Key: ddb3fa21571e4e71adef5cfbafb9b4ee
 
 ## Data
