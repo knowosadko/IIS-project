@@ -161,4 +161,5 @@ cython_debug/
 
 DiffusionFER.zip
 Data/DiffusionFER
+Data/multiEmoCrop
 Data/NoFaceTest
