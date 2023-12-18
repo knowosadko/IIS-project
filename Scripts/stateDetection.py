@@ -178,6 +178,18 @@ def main3(train, train_labels, val, val_labels, test, test_labels):
              "min_samples_split": [2, 5, 10],
              "min_samples_leaf": [1, 2, 4]}
         ]
+    
+    best_model, best_model_accuracy, best_model_time = train_models(RandomForestClassifier(),train,train_labels,val,val_labels,param_grid)
+    print(f"Best parameters of SVC: {best_model.best_params_}\n Accuracy: {best_model_accuracy} \n Time: {best_model_time} s\n")
+
+    # Save model
+    modelName = "model2.joblib"
+    store_model(best_model.best_estimator_, modelName)
+
+    # Validate on testset
+    model = load_model(modelName)
+    presictions, accuracy, time_ = evaluate_model(model, test, test_labels)
+    print(f"On test set: \n\t Accuracy: {accuracy}\n\t Time: {time_}")
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
