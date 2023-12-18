@@ -112,6 +112,7 @@ def main():
 
     main1(train, train_labels, val, val_labels, test, test_labels)
     #main2(train, train_labels, val, val_labels, test, test_labels)
+    main3(train, train_labels, val, val_labels, test, test_labels)
 
 def main1(train, train_labels, val, val_labels, test, test_labels):
     model1, model1_accuracy, model1_time = train_models(SVC(),train,train_labels,val,val_labels)
@@ -168,6 +169,15 @@ def main2(train, train_labels, val, val_labels, test, test_labels):
     #Accuracy: 0.640625
     #Time: 0.0032041072845458984
 
+def main3(train, train_labels, val, val_labels, test, test_labels):
+    param_grid = [
+            {"criterion":["gini", "entropy", "log_loss"], 
+             "n_estimatorsint": [50, 100, 150, 200, 250, 300, 500],
+             "bootstrap": [True, False],
+             "max_features": ["sqrt","log2", None], 
+             "min_samples_split": [2, 5, 10],
+             "min_samples_leaf": [1, 2, 4]}
+        ]
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
