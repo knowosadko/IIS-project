@@ -17,6 +17,7 @@ emotion_list = ["anger","disgust","fear","happiness","sadness","surprise","neutr
 def proc_image(categories,img_name):
     path = os.path.join(os.getcwd(),"Data","multiEmoCrop")
     fp = os.path.join(path,"img_to_treat",categories, img_name)
+    print(fp)
     image = iio.imread(fp)
 
     prediction = detector.detect_image(fp)
@@ -25,7 +26,7 @@ def proc_image(categories,img_name):
 
         face_info = prediction.facebox
         humor_info = prediction.emotions
-        # print(face_info)
+        # print(humor_info)
 
 
         for i in range(len(humor_info["neutral"])):
@@ -60,25 +61,26 @@ def proc_image(categories,img_name):
                         case 6:
                             real_emotion = "neutral"
                 # print(real_emotion)
-
-                
-                img_save = str(i) + "_" + img_name
-                # print(os.path.join(path,real_emotion,img_save))
-                iio.imwrite(os.path.join(path,real_emotion,img_save),crop)
-
-
+                # print(prediction_emotion_value[ind_emotion])
+                if prediction_emotion_value[ind_emotion] > 0.9: #save image only if the emotion score is above 0.9
+                    img_save = str(i) + "_" + img_name
+                    # print(os.path.join(path,real_emotion,img_save))
+                    iio.imwrite(os.path.join(path,real_emotion,img_save),crop)
 
 
-warnings.filterwarnings("ignore")
-path = os.path.join(os.getcwd(),"Data","multiEmoCrop")
-img_categories = os.listdir(os.path.join(path,"img_to_treat"))
-# print(img_categories)
-for cat in img_categories:
-    img_list = os.listdir(os.path.join(path,"img_to_treat",cat))
-    for img in img_list:
-         proc_image(cat,img)
-        #  print(os.path.join(path,"img_to_treat",cat, img))
-         
-    # print(img_list)
-# print(os.path.join(path,img_categories[0], img_list[1]))
 
+
+def main():
+
+    path = os.path.join(os.getcwd(),"Data","multiEmoCrop")
+    img_categories = os.listdir(os.path.join(path,"img_to_treat"))
+    print(img_categories)
+    for cat in img_categories:
+        img_list = os.listdir(os.path.join(path,"img_to_treat",cat))
+        for img in img_list:
+            proc_image(cat,img)
+            
+
+if __name__ == "__main__":
+    warnings.filterwarnings("ignore")
+    main()
