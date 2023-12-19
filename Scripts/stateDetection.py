@@ -83,7 +83,7 @@ def train_models(model,train_data, train_labels, val_data, val_labels, param_gri
 
 def store_model(model, modelName):
     modelPath = os.path.join(os.getcwd(), "Models", modelName)
-    dump(model, model_path)
+    dump(model, modelPath)
 
 def load_model(modelName):
     modelPath = os.path.join(os.getcwd(), "Models", modelName)
@@ -103,16 +103,18 @@ def main():
     path = os.getcwd()
 
     #Training Data
-    #labels, data = loadTrainingData(os.path.join(path,"Data","DiffusionFER","DiffusionEmotion_S","cropped"))
-    #data.to_csv(os.path.join(path,"Data","trainAUs.csv"),index=False)
-    #labels.to_csv(os.path.join(path,"Data","trainLabels.csv"),index=False)
+    # labels, data = loadTrainingData(os.path.join(path,"Data","DiffusionFER","DiffusionEmotion_S","cropped"))
+    # data.to_csv(os.path.join(path,"Data","trainAUs.csv"),index=False)
+    # labels.to_csv(os.path.join(path,"Data","trainLabels.csv"),index=False)
+
+
     labels, data = loadTrainingCSV(os.path.join(path,"Data","trainAUs.csv"), os.path.join(path,"Data","trainLabels.csv"))
     
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
 
     main1(train, train_labels, val, val_labels, test, test_labels)
-    #main2(train, train_labels, val, val_labels, test, test_labels)
-    main3(train, train_labels, val, val_labels, test, test_labels)
+    main2(train, train_labels, val, val_labels, test, test_labels)
+    # main3(train, train_labels, val, val_labels, test, test_labels)
 
 def main1(train, train_labels, val, val_labels, test, test_labels):
     model1, model1_accuracy, model1_time = train_models(SVC(),train,train_labels,val,val_labels)

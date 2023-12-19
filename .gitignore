@@ -163,4 +163,5 @@ DiffusionFER.zip
 Data/DiffusionFER
 Data/multiEmoCrop
 Data/NoFaceTest
+Data/mixed_DataSET
 data.csv
