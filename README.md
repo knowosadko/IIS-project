@@ -16,12 +16,20 @@ A virtual robot that adapts its behavior based on the emotions of users.
 |   |           ├── neutral
 |   |           ├── sad
 |   |           └── surprise
-|   └── multiEmoCrop
+|   ├── multiEmoCrop
+|   |           ├── angry
+|   |           ├── disgust
+|   |           ├── fear
+|   |           ├── happy
+|   |           ├── img_to_treat
+|   |           ├── neutral
+|   |           ├── sad
+|   |           └── surprise
+|   └── mixed_DataSET
 |               ├── angry
 |               ├── disgust
 |               ├── fear
 |               ├── happy
-|               ├── img_to_treat
 |               ├── neutral
 |               ├── sad
 |               └── surprise
