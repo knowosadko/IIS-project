@@ -34,9 +34,13 @@ A virtual robot that adapts its behavior based on the emotions of users.
 |               ├── sad
 |               └── surprise
 ├── Models
-|   └── SVC1.joblib
+|   ├── SVC1.joblib
+|   └── SVC2.joblib 
 └── Scripts
-    └── stateDetection.py
+    ├── stateDetection.py
+    ├── face_detection.py
+    ├── testnoface.py
+    └── crop_and_sort.py
 ```
 ## Resources
 Microsoft Azure Speech services, it works better than google, has lower WER (word error rate).
