@@ -10,7 +10,7 @@ def main():
     path = os. getcwd()
     
     detector = Detector(device="cpu") # Make sure running from main folder
-    modelName = "SVC2.joblib" #Change to change model
+    modelName = "model2.joblib" #Change to change model
 
     emotion = None # Initiates the emotion variable
 

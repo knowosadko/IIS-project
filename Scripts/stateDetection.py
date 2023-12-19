@@ -196,6 +196,10 @@ def main3(train, train_labels, val, val_labels, test, test_labels):
     presictions, accuracy, time_ = evaluate_model(model, test, test_labels)
     print(f"On test set: \n\t Accuracy: {accuracy}\n\t Time: {time_}")
 
+    # Random forrest: {'bootstrap': False, 'criterion': 'log_loss', 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 300}
+    # Accuracy: 0.6580645161290323
+    # Time: 0.015626192092895508
+
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     main()
