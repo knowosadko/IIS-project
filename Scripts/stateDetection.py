@@ -113,8 +113,8 @@ def main():
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
 
     main1(train, train_labels, val, val_labels, test, test_labels)
-    main2(train, train_labels, val, val_labels, test, test_labels)
-    # main3(train, train_labels, val, val_labels, test, test_labels)
+    #main2(train, train_labels, val, val_labels, test, test_labels)
+    main3(train, train_labels, val, val_labels, test, test_labels)
 
 def main1(train, train_labels, val, val_labels, test, test_labels):
     model1, model1_accuracy, model1_time = train_models(SVC(),train,train_labels,val,val_labels)
@@ -177,14 +177,12 @@ def main2(train, train_labels, val, val_labels, test, test_labels):
     #Time: 0.005008697509765625
 
 def main3(train, train_labels, val, val_labels, test, test_labels):
-    param_grid = [
-            {"criterion":["gini", "entropy", "log_loss"], 
-             "n_estimatorsint": [50, 100, 150, 200, 250, 300, 500],
-             "bootstrap": [True, False],
-             "max_features": ["sqrt","log2", None], 
-             "min_samples_split": [2, 5, 10],
-             "min_samples_leaf": [1, 2, 4]}
-        ]
+    param_grid = {"criterion":["gini", "entropy", "log_loss"], 
+                  "n_estimators": [50, 100, 150, 200, 250, 300, 500],
+                  "bootstrap": [True, False],
+                  "max_features": ["sqrt","log2", None], 
+                  "min_samples_split": [2, 5, 10],
+                  "min_samples_leaf": [1, 2, 4]}
     
     best_model, best_model_accuracy, best_model_time = train_models(RandomForestClassifier(),train,train_labels,val,val_labels,param_grid)
     print(f"Best parameters of SVC: {best_model.best_params_}\n Accuracy: {best_model_accuracy} \n Time: {best_model_time} s\n")
