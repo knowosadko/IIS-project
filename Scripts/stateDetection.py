@@ -171,6 +171,11 @@ def main2(train, train_labels, val, val_labels, test, test_labels):
     #Accuracy: 0.640625
     #Time: 0.0032041072845458984
 
+    # SVC2.joblib
+    #Parameters : {'coef0': 1, 'degree': 2, 'gamma': 1, 'kernel': 'poly'}
+    #Accuracy: 0.6440
+    #Time: 0.005008697509765625
+
 def main3(train, train_labels, val, val_labels, test, test_labels):
     param_grid = [
             {"criterion":["gini", "entropy", "log_loss"], 
