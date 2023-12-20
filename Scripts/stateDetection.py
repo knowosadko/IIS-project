@@ -103,9 +103,9 @@ def main():
     path = os.getcwd()
 
     #Training Data
-    # labels, data = loadTrainingData(os.path.join(path,"Data","DiffusionFER","DiffusionEmotion_S","cropped"))
-    # data.to_csv(os.path.join(path,"Data","trainAUs.csv"),index=False)
-    # labels.to_csv(os.path.join(path,"Data","trainLabels.csv"),index=False)
+    # labels, data = loadTrainingData(os.path.join(path,"Data","FER_2013"))
+    # data.to_csv(os.path.join(path,"Data","FER_2013_trainAUs.csv"),index=False)
+    # labels.to_csv(os.path.join(path,"Data","FER_2013_trainLabels.csv"),index=False)
 
 
     labels, data = loadTrainingCSV(os.path.join(path,"Data","trainAUs.csv"), os.path.join(path,"Data","trainLabels.csv"))
@@ -113,8 +113,8 @@ def main():
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
 
     main1(train, train_labels, val, val_labels, test, test_labels)
-    #main2(train, train_labels, val, val_labels, test, test_labels)
-    main3(train, train_labels, val, val_labels, test, test_labels)
+    # main2(train, train_labels, val, val_labels, test, test_labels)
+    # # main3(train, train_labels, val, val_labels, test, test_labels)
 
 def main1(train, train_labels, val, val_labels, test, test_labels):
     model1, model1_accuracy, model1_time = train_models(SVC(),train,train_labels,val,val_labels)
@@ -135,6 +135,7 @@ def main1(train, train_labels, val, val_labels, test, test_labels):
 
     model6, model6_accuracy, model6_time = train_models(GaussianProcessClassifier(), train, train_labels, val, val_labels)
     print(f"Model: gausian \n Accuracy: {model6_accuracy} \n Time: {model6_time} s\n")
+
 
     #SVC Accuracy: 0.6015625 Time: 0.013618230819702148 s
     #SG  Accuracy: 0.5859375 Time: 0.0019192695617675781 s
@@ -158,7 +159,7 @@ def main2(train, train_labels, val, val_labels, test, test_labels):
     #Time: 0.003987789154052734 s
 
     # Save model
-    modelName = "SVC2.joblib"
+    modelName = "FER_2013_SVC2.joblib"
     store_model(best_model.best_estimator_, modelName)
 
     # Validate on testset

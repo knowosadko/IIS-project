@@ -230,6 +230,8 @@ angry
 angry
 angry
 angry
+angry
+angry
 disgust
 disgust
 disgust
@@ -324,6 +326,8 @@ disgust
 disgust
 disgust
 disgust
+disgust
+disgust
 fear
 fear
 fear
@@ -399,6 +403,9 @@ fear
 fear
 fear
 fear
+fear
+fear
+happy
 happy
 happy
 happy
@@ -879,6 +886,8 @@ happy
 happy
 happy
 happy
+happy
+neutral
 neutral
 neutral
 neutral
@@ -1263,6 +1272,9 @@ neutral
 neutral
 neutral
 neutral
+neutral
+sad
+sad
 sad
 sad
 sad
@@ -1350,6 +1362,8 @@ sad
 sad
 sad
 sad
+surprise
+surprise
 surprise
 surprise
 surprise
