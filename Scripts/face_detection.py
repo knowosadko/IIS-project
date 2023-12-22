@@ -10,7 +10,7 @@ def main():
     path = os. getcwd()
     
     detector = Detector(device="cpu") # Make sure running from main folder
-    modelName = "model2.joblib" #Change to change model
+    modelName = "FER_2013_RF.joblib" #Change to change model
 
     emotion = None # Initiates the emotion variable
 
@@ -23,7 +23,7 @@ def main():
 
     try:
         frame_number = 0
-        frame_skip = 60  # Adjust this value to change how often landmarks and AUs are detected, higher value == less stutters downside = Less AU info
+        frame_skip = 20  # Adjust this value to change how often landmarks and AUs are detected, higher value == less stutters downside = Less AU info
         current_frame = 0
 
         while True:
