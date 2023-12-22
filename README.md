@@ -70,7 +70,7 @@ Random Forrest model {'bootstrap': False, 'criterion': 'log_loss', 'max_features
 ## Scripts
 Directory for storing script files for the system
 
-## crop_and_sort.py
+### crop_and_sort.py
 Script for cropping out the faces in MultiEmoVA dataset and for sorting them acording to emotion.
 
 ### face_detection.py
