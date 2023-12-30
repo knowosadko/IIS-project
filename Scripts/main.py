@@ -1,27 +1,35 @@
 import os
+from time import sleep
+import threading
 from feat.detector import Detector
 import cv2
 import pandas as pd
 import warnings
 
-import stateDetection
+#import ISS
 
-if __name__ == "__main__":
-    warnings.filterwarnings("ignore")
+def faceDetection():
+    # Function for running face detection
+
+    warnings.filterwarnings("ignore") # Turn of warnings for thread
+
+    import stateDetection # import state detection to thread
+
+    global emotion
 
     # Set up path
     path = os. getcwd() # Make sure running from main folder
-    
+
     # Set up detector
     detector = Detector(device="cpu") 
 
-    emotion = None # Initiates the emotion variable
+    #emotion = None # Initiates the emotion variable
     modelName = "FER_2013_RF.joblib" #Change to change model
     model = stateDetection.load_model(modelName)
 
     # Start vidio capture
     cap = cv2.VideoCapture(0)
-    
+
     # Set up colums for storing data
     columns = ['Frame'] + [f'AU{i}' for i in ['01', '02', '04', '05', '06', '07', '09', '10', '11', '12', '14', '15', '17', '20', '23', '24', '25', 26, 28, 43]]
     aus_data = pd.DataFrame(columns=columns)
@@ -65,13 +73,16 @@ if __name__ == "__main__":
                 detecting_face = False
                 emotion = None
 
-            #cv2.imshow('Face Detection', frame)
-            
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            cv2.imshow('Face Detection', frame)
+
+            if cv2.waitKey(1) == 27: #press escape to quit
                 break
 
             frame_number += 1
             current_frame += 1
+
+            if current_frame % frame_skip == 0:
+                sleep(0.01)
     except KeyboardInterrupt:
         pass
 
@@ -80,3 +91,39 @@ if __name__ == "__main__":
         cv2.destroyAllWindows()
 
     #aus_data.to_csv('data.csv', index=False)
+
+def test_something():
+    global emotion
+
+    counter = 0
+
+    while emotion == None: # Wait for emotion to be set
+        sleep(1)
+
+    while emotion != None:
+        if counter > 20:
+            break
+        print(emotion)
+        sleep(1)
+
+        counter += 1
+
+        
+
+if __name__ == "__main__":
+
+    # Setting up variable for storing emotional state
+    emotion = None
+
+    # Make thread for face detection
+    thread_stateDetection = threading.Thread(target=faceDetection,args=())
+    thread_test = threading.Thread(target=test_something,args=())
+
+    # Make thread for main tree for furhat
+    #thread_ISS = threading.Thread(target=ISS.main_tree())
+    
+    # Start treads
+    thread_stateDetection.start()
+    #cthread_ISS.start()
+    thread_test.start()
+
