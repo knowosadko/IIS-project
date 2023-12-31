@@ -93,7 +93,7 @@ def faceDetection():
     #aus_data.to_csv('data.csv', index=False)
 
 def test_something():
-    global emotion
+    emotion = getEmotion()
 
     counter = 0
 
@@ -108,7 +108,21 @@ def test_something():
 
         counter += 1
 
-        
+def getEmotion():
+    global emotion
+
+    time_waited = 0
+    time_until_idle = 20
+
+    while emotion == None: # Wait for emotion to be set
+        if time_waited >= time_until_idle:
+            # add some idle here
+            time_waited = 0
+        time_waited += 1
+        sleep(1)
+    
+    return emotion
+
 
 if __name__ == "__main__":
 
