@@ -168,18 +168,19 @@ def main1(train, train_labels, val, val_labels, test, test_labels):
 
 def main2(train, train_labels, val, val_labels, test, test_labels):
     # Vector tuning Support Vector Classification
+
+    # Set up parameter grid
     param_grid = [
         {"kernel": ["linear"]},
         {"kernel": ["poly"], "degree": [1,2,3, 5, 10], "gamma": ["scale","auto",0,0.5,1,5,10,20], "coef0": [0,1]},
         {"kernel": ["rbf"], "gamma": ["scale","auto",0,0.5,1,5,10,20]},
         {"kernel": ["sigmoid"], "gamma": ["scale","auto",0,0.5,1,5,10,20], "coef0": [0,1]}
     ]
+    # Does parameter tuning
     best_model, best_model_accuracy, best_model_time = train_models(SVC(),train,train_labels,val,val_labels,param_grid)
     print(f"Best parameters of SVC: {best_model.best_params_}\n Accuracy: {best_model_accuracy} \n Time: {best_model_time} s\n")
-    #Accuracy: 0.625
-    #Time: 0.003987789154052734 s
 
-    # Save model
+    # Save best model
     modelName = "FER_2013_SVC2.joblib"
     store_model(best_model.best_estimator_, modelName)
 
@@ -192,6 +193,7 @@ def main2(train, train_labels, val, val_labels, test, test_labels):
 def main3(train, train_labels, val, val_labels, test, test_labels):
     # Parameter tuning random forrest
 
+    # Set up parameter grid
     param_grid = {"criterion":["gini", "entropy", "log_loss"], 
                   "n_estimators": [50, 100, 150, 200, 250, 300, 500],
                   "bootstrap": [True, False],
@@ -199,10 +201,11 @@ def main3(train, train_labels, val, val_labels, test, test_labels):
                   "min_samples_split": [2, 5, 10],
                   "min_samples_leaf": [1, 2, 4]}
     
+    # Does parameter tuning
     best_model, best_model_accuracy, best_model_time = train_models(RandomForestClassifier(),train,train_labels,val,val_labels,param_grid)
     print(f"Best parameters of SVC: {best_model.best_params_}\n Accuracy: {best_model_accuracy} \n Time: {best_model_time} s\n")
 
-    # Save model
+    # Save best model
     modelName = "model3.joblib"
     store_model(best_model.best_estimator_, modelName)
 
