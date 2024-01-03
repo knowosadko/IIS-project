@@ -124,7 +124,7 @@ def main():
 
     # Load Training Data from csvs
     labels, data = loadTrainingCSV(os.path.join(path,"Data","trainAUs.csv"), os.path.join(path,"Data","trainLabels.csv"))
-    # 28709 thousand faces
+    # 28709 faces
     
     # Split traing, validation and test sets
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
@@ -140,13 +140,13 @@ def main():
 
 def main1(train, train_labels, val, val_labels, test, test_labels):
     # Tests multiple different models with default parameters
-    # Example result:
-    #   SVC Accuracy: 0.6015625 Time: 0.013618230819702148 s
-    #   SG  Accuracy: 0.5859375 Time: 0.0019192695617675781 s
-    #   Nearest neighbors  Accuracy: 0.5546875 Time: 0.12466597557067871 s
-    #   tree Accuracy: 0.484375 Time: 0.0010335445404052734 s
-    #   randomforest  Accuracy: 0.62109375 Time: 0.0064849853515625 s
-    #   gausian Accuracy: 0.59765625 Time: 0.28975892066955566 s
+    # Example result on 2870 faces (validation set):
+    #   SVC Accuracy: 0.6506410256410257 Time: 0.0170443058013916 s
+    #   SG  Accuracy: 0.6538461538461539 Time: 0.0040607452392578125 s
+    #   Nearest neighbors  Accuracy: 0.5512820512820513 Time: 0.13010001182556152 s
+    #   tree Accuracy: 0.4935897435897436 Time: 0.002001047134399414 s
+    #   randomforest  Accuracy: 0.6666666666666666 Time: 0.006826639175415039 s
+    #   gausian Accuracy: 0.6602564102564102 Time: 0.0.2799561023712158 s
 
     model1, model1_accuracy, model1_time = train_models(SVC(),train,train_labels,val,val_labels)
     print(f"Model: SVC \n Accuracy: {model1_accuracy} \n Time: {model1_time} s\n")
