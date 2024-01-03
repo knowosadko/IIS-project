@@ -19,38 +19,48 @@ import warnings
 
 
 def loadTrainingData(data_path):
-    # Function for loading a dictinary of images as inpuit data (Used for training)
-    categories = os.listdir(data_path)
+    # Function for loading a dictinary folders, named after emotion categories of contained images, as inpuit data (Used for training)
 
+    # Initiate lists for storing labels and AUs data
     labels = []
     data = []
 
+    # Set detector
     detector = Detector(device="cuda")
 
-    for categorie in categories:
+    # Go through folders with category(emotion) names 
+    categories = os.listdir(data_path)
+    for categorie in categories: 
         img_path = os.path.join(data_path, categorie)
         images = os.listdir(img_path)
 
+        # Process all images of categories
         for file in images:
             file_path = os.path.join(img_path,file)
 
+            # Get Action Units 
             aus_data = detector.detect_image(file_path)
 
+            # If no face is detected do not store
             if (aus_data.dropna().shape[0] != 0): # Only store detected faces
-                if len(data) == 0: # Get columns only once
+
+                # Store the category name (once per folder)
+                if len(data) == 0:
                     columnNames = aus_data.au_columns
                 
+                # Append labels and data
                 labels.append(categorie)
                 data.append(aus_data.loc[0].aus.values.flatten().tolist())
 
+        # Convert to pandas format
         labelset = pd.DataFrame(np.array(labels), columns=["emotion"])
-
-        # convert to pandas format
         dataset = pd.DataFrame(np.array(data), columns=columnNames)
 
     return labelset, dataset
 
 def loadTrainingCSV(data_path,label_path):
+    # Loads csvs with AUs data and labels respectivly
+
     dataset = pd.read_csv(data_path)
     labelset = pd.read_csv(label_path)
 
@@ -63,35 +73,38 @@ def splitTrainValTest(data, labels, sizeTest, sizeVal):
     return train_in, train_out, val_in, val_out, test_in, test_out 
 
 def train_models(model,train_data, train_labels, val_data, val_labels, param_grid=[]):
+    # Train model on training data and validate with validation data for internal compairason
+    # If param_grid set does parameter tuning
 
-    if (len(param_grid) > 0):
+    if (len(param_grid) > 0): # Check if parameter tuning
         model = GridSearchCV(model, param_grid)
 
-    model.fit(train_data, train_labels)
+    model.fit(train_data, train_labels) # Fit model to training data
 
-    if (len(param_grid) > 0):
+    if (len(param_grid) > 0): # Does prediction on validation set
         tic = time.time()
         predicted_val = model.best_estimator_.predict(val_data)
     else:
         tic = time.time()
         predicted_val = model.predict(val_data)
     toc = time.time()
-    process_time = toc - tic
-    accuracy = accuracy_score(predicted_val, val_labels)
+    process_time = toc - tic # Store processing time
+    accuracy = accuracy_score(predicted_val, val_labels) # Store accuracy on validation set
 
     return model, accuracy, process_time
 
 def store_model(model, modelName):
+    # Function for storing a model in the model directory
     modelPath = os.path.join(os.getcwd(), "Models", modelName)
     dump(model, modelPath)
 
 def load_model(modelName):
+    # Function for loading a stored model
     modelPath = os.path.join(os.getcwd(), "Models", modelName)
     return load_(modelPath)
 
 def evaluate_model(model, data, labels):
-    # Function for evalating trained model on test data
-
+    # Function for evalating trained model on test data, outputs predictions, accuracy and processing time
     tic = time.time()
     predictions = model.predict(data)
     toc = time.time()
@@ -100,23 +113,40 @@ def evaluate_model(model, data, labels):
     return predictions, accuracy, process_time
 
 def main():
+    # Main scripts for running training of modeks
+
     path = os.getcwd()
 
-    #Training Data
+    # Store Training Data as a csv (only run once to genetate csv files)
     # labels, data = loadTrainingData(os.path.join(path,"Data","FER_2013"))
     # data.to_csv(os.path.join(path,"Data","FER_2013_trainAUs.csv"),index=False)
     # labels.to_csv(os.path.join(path,"Data","FER_2013_trainLabels.csv"),index=False)
 
-
+    # Load Training Data from csvs
     labels, data = loadTrainingCSV(os.path.join(path,"Data","trainAUs.csv"), os.path.join(path,"Data","trainLabels.csv"))
     
+    # Split traing, validation and test sets
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
 
+    # Tests multiple models
     main1(train, train_labels, val, val_labels, test, test_labels)
+
+    # Parameter tuning for SVC model
     # main2(train, train_labels, val, val_labels, test, test_labels)
+
+    # Parameter tuning for Random Forest model
     # # main3(train, train_labels, val, val_labels, test, test_labels)
 
 def main1(train, train_labels, val, val_labels, test, test_labels):
+    # Tests multiple different models with default parameters
+    # Example result:
+    #   SVC Accuracy: 0.6015625 Time: 0.013618230819702148 s
+    #   SG  Accuracy: 0.5859375 Time: 0.0019192695617675781 s
+    #   Nearest neighbors  Accuracy: 0.5546875 Time: 0.12466597557067871 s
+    #   tree Accuracy: 0.484375 Time: 0.0010335445404052734 s
+    #   randomforest  Accuracy: 0.62109375 Time: 0.0064849853515625 s
+    #   gausian Accuracy: 0.59765625 Time: 0.28975892066955566 s
+
     model1, model1_accuracy, model1_time = train_models(SVC(),train,train_labels,val,val_labels)
     print(f"Model: SVC \n Accuracy: {model1_accuracy} \n Time: {model1_time} s\n")
 
@@ -136,14 +166,6 @@ def main1(train, train_labels, val, val_labels, test, test_labels):
     model6, model6_accuracy, model6_time = train_models(GaussianProcessClassifier(), train, train_labels, val, val_labels)
     print(f"Model: gausian \n Accuracy: {model6_accuracy} \n Time: {model6_time} s\n")
 
-    #SVC Accuracy: 0.6015625 Time: 0.013618230819702148 s
-    #SG  Accuracy: 0.5859375 Time: 0.0019192695617675781 s
-    #Nearest neighbors  Accuracy: 0.5546875 Time: 0.12466597557067871 s
-    #tree Accuracy: 0.484375 Time: 0.0010335445404052734 s
-    #randomforest  Accuracy: 0.62109375 Time: 0.0064849853515625 s
-    #gausian Accuracy: 0.59765625 Time: 0.28975892066955566 s
-
-    
 def main2(train, train_labels, val, val_labels, test, test_labels):
     # Vector tuning Support Vector Classification
     param_grid = [
