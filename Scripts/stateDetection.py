@@ -215,5 +215,5 @@ def main3(train, train_labels, val, val_labels, test, test_labels):
     print(f"On test set: \n\t Accuracy: {accuracy}\n\t Time: {time_}")
 
 if __name__ == "__main__":
-    warnings.filterwarnings("ignore")
+    warnings.filterwarnings("ignore") # Disabels warnings (sklearn and pandas seem to have some version conflicts)
     main()
