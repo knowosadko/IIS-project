@@ -36,6 +36,8 @@ To run place the working directory in the ISS-PROJECT folder and run Scripts/mai
 |               ├── sad
 |               └── surprise
 ├── Models
+|   ├── FER_2013_RF.joblib
+|   ├── model2.joblib
 |   ├── SVC1.joblib
 |   └── SVC2.joblib 
 └── Scripts
@@ -64,11 +66,19 @@ CSV file storing Labels for the trainAUs.csv
 ## Models
 Dictionary for storing trained models
 
+## FER_2013_SVC2.joblib
+
+## model2.joblib
+Random Forrest model ('bootstrap': False, 'criterion': 'log_loss', 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 300)
+Accuracy: 0.6580645161290323
+
 ### SVC1.joblib
-Support Vector Classification model ('coef0': 1, 'degree': 2, 'gamma': 0.5, 'kernel': 'poly') Accuracy: 0.640625
+Support Vector Classification model ('coef0': 1, 'degree': 2, 'gamma': 0.5, 'kernel': 'poly') 
+Accuracy: 0.640625
 
 ### model2.joblib
-Random Forrest model {'bootstrap': False, 'criterion': 'log_loss', 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 300} Accuracy: 0.6580645161290323
+Random Forrest model {'bootstrap': False, 'criterion': 'log_loss', 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 300} 
+Accuracy: 0.6580645161290323
 
 ## Scripts
 Directory for storing script files for the system
