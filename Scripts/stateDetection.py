@@ -168,6 +168,8 @@ def main2(train, train_labels, val, val_labels, test, test_labels):
 
 
 def main3(train, train_labels, val, val_labels, test, test_labels):
+    # Parameter tuning random forrest
+
     param_grid = {"criterion":["gini", "entropy", "log_loss"], 
                   "n_estimators": [50, 100, 150, 200, 250, 300, 500],
                   "bootstrap": [True, False],
@@ -179,7 +181,7 @@ def main3(train, train_labels, val, val_labels, test, test_labels):
     print(f"Best parameters of SVC: {best_model.best_params_}\n Accuracy: {best_model_accuracy} \n Time: {best_model_time} s\n")
 
     # Save model
-    modelName = "model2.joblib"
+    modelName = "model3.joblib"
     store_model(best_model.best_estimator_, modelName)
 
     # Validate on testset
