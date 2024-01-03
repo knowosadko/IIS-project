@@ -39,12 +39,12 @@ def faceDetection():
         frame_skip = 20  # Adjust this value to change how often landmarks and AUs are detected, higher value == less stutters downside = Less AU info
         current_frame = 0
 
-        while True:
+        while True: # detect faces
             ret, frame = cap.read()
             faces = detector.detect_faces(frame)
 
             try:
-                face = faces[0][0]
+                face = faces[0][0] # Select "first" face
                 detecting_face = True
                 (x0, y0, x1, y1, p) = face
 
@@ -52,11 +52,10 @@ def faceDetection():
                 cv2.rectangle(frame, (int(x0), int(y0)), (int(x1), int(y1)), (255, 0, 0), 2)
 
 
-                if current_frame % frame_skip == 0:
+                if current_frame % frame_skip == 0: # Frame not skipped
                     # Predic emotion
                     landmarks = detector.detect_landmarks(frame, faces)
-                    aus = detector.detect_aus(frame, landmarks)[0][0]
-                                        
+                    aus = detector.detect_aus(frame, landmarks)[0][0]             
                     emotion = model.predict(pd.DataFrame([list(aus)], columns=columns[1:]))
 
                     # Storing data (disabled)
@@ -73,26 +72,29 @@ def faceDetection():
                 detecting_face = False
                 emotion = None
 
-            cv2.imshow('Face Detection', frame)
+            cv2.imshow('Face Detection', frame) # Show camera
 
             if cv2.waitKey(1) == 27: #press escape to quit
                 break
 
+            # Increase counter
             frame_number += 1
             current_frame += 1
 
-            if current_frame % frame_skip == 0:
+            if current_frame % frame_skip == 0: # Make some time for the ISS to run
                 sleep(0.01)
     except KeyboardInterrupt:
         pass
 
-    finally:
+    finally: # Turning off
         cap.release()
         cv2.destroyAllWindows()
 
     #aus_data.to_csv('data.csv', index=False)
 
 def test_something():
+    # Just a test script
+
     emotion = getEmotion()
 
     counter = 0
@@ -109,6 +111,8 @@ def test_something():
         counter += 1
 
 def getEmotion():
+    # Script for fetching emotions, if no face detected waits
+
     global emotion
 
     time_waited = 0
