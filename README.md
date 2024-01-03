@@ -70,11 +70,18 @@ Dictionary for storing trained models
 
 ## model2.joblib
 Random Forrest model ('bootstrap': False, 'criterion': 'log_loss', 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 300)
-Accuracy: 0.6580645161290323
+Test Accuracy: 0.6580645161290323
+Test Time: 0.015626192092895508
 
 ### SVC1.joblib
 Support Vector Classification model ('coef0': 1, 'degree': 2, 'gamma': 0.5, 'kernel': 'poly') 
-Accuracy: 0.640625
+Test Accuracy: 0.640625
+Test Time: 0.0032041072845458984
+
+### SVC2.joblib
+Support Vector Classification model ('coef0': 1, 'degree': 2, 'gamma': 1, 'kernel': 'poly')
+Test Accuracy: 0.6440
+Test Time: 0.005008697509765625
 
 ### model2.joblib
 Random Forrest model {'bootstrap': False, 'criterion': 'log_loss', 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 300} 

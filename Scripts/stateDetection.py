@@ -136,7 +136,6 @@ def main1(train, train_labels, val, val_labels, test, test_labels):
     model6, model6_accuracy, model6_time = train_models(GaussianProcessClassifier(), train, train_labels, val, val_labels)
     print(f"Model: gausian \n Accuracy: {model6_accuracy} \n Time: {model6_time} s\n")
 
-
     #SVC Accuracy: 0.6015625 Time: 0.013618230819702148 s
     #SG  Accuracy: 0.5859375 Time: 0.0019192695617675781 s
     #Nearest neighbors  Accuracy: 0.5546875 Time: 0.12466597557067871 s
@@ -167,15 +166,6 @@ def main2(train, train_labels, val, val_labels, test, test_labels):
     presictions, accuracy, time_ = evaluate_model(model, test, test_labels)
     print(f"On test set: \n\t Accuracy: {accuracy}\n\t Time: {time_}")
 
-    # SCV1.joblib
-    #Parameters: {'coef0': 1, 'degree': 2, 'gamma': 0.5, 'kernel': 'poly'}
-    #Accuracy: 0.640625
-    #Time: 0.0032041072845458984
-
-    # SVC2.joblib
-    #Parameters : {'coef0': 1, 'degree': 2, 'gamma': 1, 'kernel': 'poly'}
-    #Accuracy: 0.6440
-    #Time: 0.005008697509765625
 
 def main3(train, train_labels, val, val_labels, test, test_labels):
     param_grid = {"criterion":["gini", "entropy", "log_loss"], 
@@ -196,10 +186,6 @@ def main3(train, train_labels, val, val_labels, test, test_labels):
     model = load_model(modelName)
     presictions, accuracy, time_ = evaluate_model(model, test, test_labels)
     print(f"On test set: \n\t Accuracy: {accuracy}\n\t Time: {time_}")
-
-    # Random forrest: {'bootstrap': False, 'criterion': 'log_loss', 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 300}
-    # Accuracy: 0.6580645161290323
-    # Time: 0.015626192092895508
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
