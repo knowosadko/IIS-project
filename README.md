@@ -70,11 +70,14 @@ Random Forrest model {'bootstrap': False, 'criterion': 'log_loss', 'max_features
 ## Scripts
 Directory for storing script files for the system
 
+### main.py
+Main script for running the face detection in parralell
+
 ### crop_and_sort.py
 Script for cropping out the faces in MultiEmoVA dataset and for sorting them acording to emotion.
 
 ### face_detection.py
-Script for detecting faces and predicting their emotion real time.
+Old script for detecting faces and predicting their emotion real time.
 
 ### stateDetection
 Script for training Machine Learning models.
