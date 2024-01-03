@@ -2,6 +2,8 @@
 Project for the Intelligent Interactive Systems (IIS)
 A virtual robot that adapts its behavior based on the emotions of users.
 
+To run place the working directory in the ISS-PROJECT folder and run Scripts/main.py
+
 ```bash
 ├── Data
 |   ├── trainAUs.csv
@@ -37,10 +39,11 @@ A virtual robot that adapts its behavior based on the emotions of users.
 |   ├── SVC1.joblib
 |   └── SVC2.joblib 
 └── Scripts
-    ├── stateDetection.py
+    ├── main.py
+    ├── crop_and_sort.py
     ├── face_detection.py
-    ├── testnoface.py
-    └── crop_and_sort.py
+    ├── stateDetection.py
+    └── testnoface.py
 ```
 
 ## Data
@@ -82,6 +85,8 @@ Old script for detecting faces and predicting their emotion real time.
 ### stateDetection
 Script for training Machine Learning models.
 
+### testnoface.py
+Testing script for what happens if no AUs are predicted 
 
 # Resources
 Microsoft Azure Speech services, it works better than google, has lower WER (word error rate).
