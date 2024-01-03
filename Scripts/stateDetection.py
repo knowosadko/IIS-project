@@ -124,6 +124,7 @@ def main():
 
     # Load Training Data from csvs
     labels, data = loadTrainingCSV(os.path.join(path,"Data","trainAUs.csv"), os.path.join(path,"Data","trainLabels.csv"))
+    # 28709 thousand faces
     
     # Split traing, validation and test sets
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
