@@ -66,9 +66,16 @@ CSV file storing Labels for the trainAUs.csv
 ## Models
 Dictionary for storing trained models
 
-## FER_2013_SVC2.joblib
+### FER_2013_RandomForest.joblib
+Random Forrest model ('bootstrap': True, 'criterion': 'gini', 'max_features': 'sqrt', 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200)
+Trained on 20096 faces from the FER_2013 dataset
+Evaluated on 2870 faces
+Test Accuracy: 0.6153846153846154
+Test Time: 0.00996708869934082
 
-## model2.joblib
+### FER_2013_SVC2.joblib
+
+### model2.joblib
 Random Forrest model ('bootstrap': False, 'criterion': 'log_loss', 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 300)
 Test Accuracy: 0.6580645161290323
 Test Time: 0.015626192092895508

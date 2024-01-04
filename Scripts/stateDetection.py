@@ -130,13 +130,13 @@ def main():
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
 
     # Tests multiple models
-    main1(train, train_labels, val, val_labels, test, test_labels)
+    #main1(train, train_labels, val, val_labels, test, test_labels)
 
     # Parameter tuning for SVC model
     # main2(train, train_labels, val, val_labels, test, test_labels)
 
     # Parameter tuning for Random Forest model
-    # # main3(train, train_labels, val, val_labels, test, test_labels)
+    main3(train, train_labels, val, val_labels, test, test_labels)
 
 def main1(train, train_labels, val, val_labels, test, test_labels):
     # Tests multiple different models with default parameters
@@ -204,7 +204,7 @@ def main3(train, train_labels, val, val_labels, test, test_labels):
     
     # Does parameter tuning
     best_model, best_model_accuracy, best_model_time = train_models(RandomForestClassifier(),train,train_labels,val,val_labels,param_grid)
-    print(f"Best parameters of SVC: {best_model.best_params_}\n Accuracy: {best_model_accuracy} \n Time: {best_model_time} s\n")
+    print(f"Best parameters of Random Forest: {best_model.best_params_}\n Accuracy: {best_model_accuracy} \n Time: {best_model_time} s\n")
 
     # Save best model
     modelName = "FER_2013_RandomForest.joblib"
