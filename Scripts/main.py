@@ -5,7 +5,8 @@ from feat.detector import Detector
 import cv2
 import pandas as pd
 import warnings
-
+from ISS import main_tree
+import globals
 #import ISS
 
 def faceDetection():
@@ -14,8 +15,6 @@ def faceDetection():
     warnings.filterwarnings("ignore") # Turn of warnings for thread
 
     import stateDetection # import state detection to thread
-
-    global emotion
 
     # Set up path
     path = os. getcwd() # Make sure running from main folder
@@ -38,11 +37,11 @@ def faceDetection():
         frame_number = 0
         frame_skip = 20  # Adjust this value to change how often landmarks and AUs are detected, higher value == less stutters downside = Less AU info
         current_frame = 0
-
+        emotion = None
         while True: # detect faces
             ret, frame = cap.read()
             faces = detector.detect_faces(frame)
-
+            
             try:
                 face = faces[0][0] # Select "first" face
                 detecting_face = True
@@ -55,16 +54,20 @@ def faceDetection():
                 if current_frame % frame_skip == 0: # Frame not skipped
                     # Predic emotion
                     landmarks = detector.detect_landmarks(frame, faces)
-                    aus = detector.detect_aus(frame, landmarks)[0][0]             
-                    emotion = model.predict(pd.DataFrame([list(aus)], columns=columns[1:]))
-
+                    aus = detector.detect_aus(frame, landmarks)[0][0]
+                    globals.semaphor.acquire()             
+                    globals.emotion = model.predict(pd.DataFrame([list(aus)], columns=columns[1:]))
+                    globals.semaphor.release()
                     # Storing data (disabled)
                     frame_data = pd.DataFrame([[frame_number] + list(aus)], columns=columns)
                     aus_data = pd.concat([aus_data, frame_data], ignore_index=True)
                     #aus_data.to_csv('data.csv', index=False)
 
+                globals.semaphor.acquire()             
+                emotion = globals.emotion
+                globals.semaphor.release()
                 # Display emotion
-                if emotion != None:
+                if globals.emotion != None:
                     cv2.putText(frame, emotion[0], (int(x0), int(y0)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255))
 
             except IndexError as e:
@@ -112,13 +115,11 @@ def test_something():
 
 def getEmotion():
     # Script for fetching emotions, if no face detected waits
-
-    global emotion
-
     time_waited = 0
     time_until_idle = 20
-
-    while emotion == None: # Wait for emotion to be set
+    emotion = emotion_shared.emotion
+    while emotion != None: # Wait for emotion to be set
+        print(emotion_shared.emotion)
         if time_waited >= time_until_idle:
             # add some idle here
             time_waited = 0
@@ -131,17 +132,14 @@ def getEmotion():
 if __name__ == "__main__":
 
     # Setting up variable for storing emotional state
-    emotion = None
 
     # Make thread for face detection
     thread_stateDetection = threading.Thread(target=faceDetection,args=())
     thread_test = threading.Thread(target=test_something,args=())
-
-    # Make thread for main tree for furhat
-    #thread_ISS = threading.Thread(target=ISS.main_tree())
     
-    # Start treads
+    # Make thread for main tree for furhat
+    thread_ISS = threading.Thread(target=main_tree)
     thread_stateDetection.start()
-    #cthread_ISS.start()
-    thread_test.start()
+    thread_ISS.start()
+
 

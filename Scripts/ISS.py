@@ -2,11 +2,12 @@ from time import sleep
 import random
 from furhat_remote_api import FurhatRemoteAPI
 from numpy.random import randint
+import globals
 
 FURHAT_IP = "127.0.1.1"
 
-furhat = FurhatRemoteAPI(FURHAT_IP)
-furhat.set_led(red=100, green=50, blue=50)
+#furhat = FurhatRemoteAPI(FURHAT_IP)
+#furhat.set_led(red=100, green=50, blue=50)
 
 
 FACES = {
@@ -97,10 +98,8 @@ def LOOK_DOWN(speed=1):
 def set_persona(persona):
     furhat.gesture(name="CloseEyes")
     furhat.gesture(body=LOOK_DOWN(speed=1), blocking=True)
-    sleep(0.3)
     furhat.set_face(character=FACES[persona], mask="Adult")
     furhat.set_voice(name=VOICES_EN[persona])
-    sleep(2)
     furhat.gesture(body=LOOK_BACK(speed=1), blocking=True)
 
 # Say with blocking (blocking say, bsay for short)
@@ -114,13 +113,22 @@ def emotion_categorizer(emote):
         return "positive"
     else:
         return "neutral"
+# TODO make persona follow the position of the face of the customer 
+ 
  
 def main_tree():
     set_persona('Amany')
     furhat.set_voice(name='Matthew')
-    
-    current_emotion = "currentEmotion"
-    current_emotion_categorized = emotion_categorizer("current_emotion")
+    emotion = None
+    while emotion == None: 
+        globals.semaphor.acquire()
+        emotion = globals.emotion
+        globals.semaphor.release()
+        sleep(1)
+    globals.semaphor.acquire()
+    emotion = globals.emotion
+    globals.semaphor.release()
+    current_emotion_categorized = emotion_categorizer(emotion)
     match current_emotion_categorized:
         case "positive":
             first_pos()
@@ -129,7 +137,7 @@ def main_tree():
         case "neutral":
             first_pos()
 
-def first_pos():
+def first_pos(): # TODO Can be merged into def first()
     bsay("Hello! how are you today? You seem kind of happy, am i wrong?")
     while True:
         # Speak and listen
@@ -140,7 +148,7 @@ def first_pos():
         elif "no" in message_lower:
             second_pos()
              
-def first_neg():
+def first_neg(): # TODO Can be merged into def first()
     bsay("Hello! how are you today? You seem kind of sad, am i wrong?")
     while True:
         # Speak and listen
@@ -151,7 +159,7 @@ def first_neg():
         elif "no" in message_lower:
             second_neg()
              
-def mistake_pos():
+def mistake_pos(): # TODO Can be merged into def mistake()
     bsay("my mistake, are you sad?")
     while True:
         # Speak and listen
@@ -162,7 +170,7 @@ def mistake_pos():
         elif "no" in message_lower:
             first_neutral()
              
-def mistake_neg():
+def mistake_neg(): # TODO Can be merged into def mistake()
     bsay("my mistake, are you happy?")
     while True:
         # Speak and listen
@@ -173,7 +181,7 @@ def mistake_neg():
         elif "no" in message_lower:
             first_neutral()
              
-def second_pos():
+def second_pos(): # TODO merge into the second()
     bsay("Thats Great! Feeling happy is awesome. Can i offer you a drink?")
     while True:
         # Speak and listen
@@ -184,7 +192,7 @@ def second_pos():
         elif "no" in message_lower:
             no_drink()
     
-def second_neg():
+def second_neg(): # TODO merge into the second()
     bsay("We all have our ups and downs. Can i offer you a drink to perhaps make you feel better?")
     while True:
         # Speak and listen
@@ -206,7 +214,7 @@ def first_neutral():
         elif "no" in message_lower:
             no_drink()
     
-def no_drink():
+def no_drink(): # TODO this sounds a bit weird
     bsay("What are you doing in a bar then? Either leave or have a drink. Are you sure you dont want to have a drink?")
     while True:
         # Speak and listen
@@ -216,7 +224,11 @@ def no_drink():
             no_drink()
         elif "no" in message_lower:
             drink_emotion()
-    
+
+# TODO add a question how do you feel? Then customer can answer and we using NLTK we can see what was the emotion.
+# TODO add a response from persona, "Yeah, I can see" or "You're body language doesn't say so".  
+# TODO Ask if they wants to talk then -> OpenAI API -> "I dont want to talk anymmore" disables the API.
+
     
 def drink_emotion():
     bsay("Okay, let me take a look at you and try to figure our how youre feeling currently....")
