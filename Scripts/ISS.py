@@ -271,7 +271,7 @@ def drink_offer(emotion):# TODO we can change it to be more dramatic
     
 def drink_accepted(emotion,cocktail):
     bsay(get_text(HAND_DRINK))
-    sleep(5)
+    sleep(7)
     # emotion detect 
     emotion = get_emotion(mode="complete")
     if emotion=="disgust":
