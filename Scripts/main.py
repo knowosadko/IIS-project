@@ -20,7 +20,7 @@ def faceDetection():
     path = os. getcwd() # Make sure running from main folder
 
     # Set up detector
-    detector = Detector(device="cpu") 
+    detector = Detector(device="cuda") 
 
     #emotion = None # Initiates the emotion variable
     modelName = "FER_2013_RF.joblib" #Change to change model
