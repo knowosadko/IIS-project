@@ -236,6 +236,7 @@ def no_drink():
     
 def drink_emotion(emotion):
     bsay("Okay, let me take a look at you and try to figure our how youre feeling currently....")
+    emotion = get_emotion(mode="reduced")
     # Add animation look down to up
     sleep(3)
     drink_offer(emotion)
