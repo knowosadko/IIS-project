@@ -56,7 +56,7 @@ def faceDetection():
                     landmarks = detector.detect_landmarks(frame, faces)
                     aus = detector.detect_aus(frame, landmarks)[0][0]
                     globals.semaphor.acquire()             
-                    globals.emotion = ['sad']#model.predict(pd.DataFrame([list(aus)], columns=columns[1:]))
+                    globals.emotion = model.predict(pd.DataFrame([list(aus)], columns=columns[1:]))
                     globals.semaphor.release()
                     # Storing data (disabled)
                     frame_data = pd.DataFrame([[frame_number] + list(aus)], columns=columns)
