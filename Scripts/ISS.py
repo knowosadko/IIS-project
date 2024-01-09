@@ -299,6 +299,7 @@ def drink_accepted(emotion,cocktail):
         bsay("Now that you have a drink. Maybe we can talk?")
     message = listen()
     if similar(message,"yes, we can talk"):
+        current_emotion = get_emotion(mode="complete")
         free_conversation(current_emotion,cocktail)
         bsay("If you don't want to talk, it is fine.")
     else:
