@@ -207,7 +207,7 @@ def main3(train, train_labels, val, val_labels, test, test_labels):
     print(f"Best parameters of Random Forest: {best_model.best_params_}\n Accuracy: {best_model_accuracy} \n Time: {best_model_time} s\n")
 
     # Save best model
-    modelName = "FER_2013_RandomForest.joblib"
+    modelName = "FER_2013_RF.joblib"
     store_model(best_model.best_estimator_, modelName)
 
     # Validate on testset
