@@ -258,14 +258,14 @@ def drink_offer(emotion):# TODO we can change it to be more dramatic
             if similar(message,"No, thank you."):
                 bsay("I hope you had a good time. See you!")
                 # TODO: persona should smile
-                done = True
-            # Assume any other response is yes.
+                done = True            # Assume any other response is yes.
+            else:
+                drink_emotion(emotion)
         elif similar(message,"No, I do not want it."):
             drink_emotion(emotion)
         
         
-        
-
+    
 def drink_accepted(emotion,cocktail):
     bsay(get_text(HAND_DRINK))
     sleep(7)
@@ -298,7 +298,7 @@ def drink_accepted(emotion,cocktail):
     else:
         bsay("Now that you have a drink. Maybe we can talk?")
     message = listen()
-    if similar(message,"yes"):
+    if similar(message,"yes, we can talk"):
         free_conversation(current_emotion,cocktail)
         bsay("If you don't want to talk, it is fine.")
     else:
