@@ -56,7 +56,7 @@ def faceDetection():
                     landmarks = detector.detect_landmarks(frame, faces)
                     aus = detector.detect_aus(frame, landmarks)[0][0]
                     globals.semaphor.acquire()             
-                    globals.emotion = model.predict(pd.DataFrame([list(aus)], columns=columns[1:]))
+                    globals.emotion = ['sad']#model.predict(pd.DataFrame([list(aus)], columns=columns[1:]))
                     globals.semaphor.release()
                     # Storing data (disabled)
                     frame_data = pd.DataFrame([[frame_number] + list(aus)], columns=columns)
@@ -95,39 +95,6 @@ def faceDetection():
 
     #aus_data.to_csv('data.csv', index=False)
 
-def test_something():
-    # Just a test script
-
-    emotion = getEmotion()
-
-    counter = 0
-
-    while emotion == None: # Wait for emotion to be set
-        sleep(1)
-
-    while emotion != None:
-        if counter > 20:
-            break
-        print(emotion)
-        sleep(1)
-
-        counter += 1
-
-def getEmotion():
-    # Script for fetching emotions, if no face detected waits
-    time_waited = 0
-    time_until_idle = 20
-    emotion = emotion_shared.emotion
-    while emotion != None: # Wait for emotion to be set
-        print(emotion_shared.emotion)
-        if time_waited >= time_until_idle:
-            # add some idle here
-            time_waited = 0
-        time_waited += 1
-        sleep(1)
-    
-    return emotion
-
 
 if __name__ == "__main__":
 
@@ -135,7 +102,6 @@ if __name__ == "__main__":
 
     # Make thread for face detection
     thread_stateDetection = threading.Thread(target=faceDetection,args=())
-    thread_test = threading.Thread(target=test_something,args=())
     
     # Make thread for main tree for furhat
     thread_ISS = threading.Thread(target=main_tree)

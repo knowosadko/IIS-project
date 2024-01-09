@@ -3,11 +3,17 @@ import random
 from furhat_remote_api import FurhatRemoteAPI
 from numpy.random import randint
 import globals
+from texts import *
+from sentence_transformers import SentenceTransformer, util
+from openai import OpenAI
+
+#DEBUG PURPOUSES
+emotion = "happy"
 
 FURHAT_IP = "127.0.1.1"
 
-#furhat = FurhatRemoteAPI(FURHAT_IP)
-#furhat.set_led(red=100, green=50, blue=50)
+furhat = FurhatRemoteAPI(FURHAT_IP)
+furhat.set_led(red=100, green=50, blue=50)
 
 
 FACES = {
@@ -24,6 +30,9 @@ VOICES_NATIVE = {
     'Loo'    : 'SofieNeural',
     'Amany'  : 'AmanyNeural'
 }
+
+model = SentenceTransformer('distilbert-base-nli-mean-tokens')
+
 
 def idle_animation():
     furhat.gesture(name="GazeAway")
@@ -106,14 +115,28 @@ def set_persona(persona):
 def bsay(line):
     furhat.say(text=line, blocking=True)
 
-def emotion_categorizer(emote):
-    if emote == "angry" or "disgust" or "fear" or "sad":
-        return "negative"
-    elif emote == "happy":
-        return "positive"
+def get_emotion(mode="complete"):
+    globals.semaphor.acquire()
+    emote = globals.emotion[0]
+    globals.semaphor.release()
+    if mode == "valence":
+        if emote in ["angry", "disgust", "fear", "sad"]:
+            return "negative"
+        elif emote == "happy":
+            return "positive"
+        elif emote== "surprise":
+            return "neutral"
+        else:
+            return "neutral"
+    elif mode=="reduced":
+        if emote in ["disgust","fear","surprise"]:
+            return "neutral"
+        else:
+            return emote
     else:
-        return "neutral"
-# TODO make persona follow the position of the face of the customer 
+        return emote
+        
+            
  
  
 def main_tree():
@@ -124,138 +147,185 @@ def main_tree():
         globals.semaphor.acquire()
         emotion = globals.emotion
         globals.semaphor.release()
-        sleep(1)
-    globals.semaphor.acquire()
-    emotion = globals.emotion
-    globals.semaphor.release()
-    current_emotion_categorized = emotion_categorizer(emotion)
-    match current_emotion_categorized:
-        case "positive":
-            first_pos()
-        case "negative":
-            first_neg()
-        case "neutral":
-            first_pos()
+        sleep(1)  
+    emotion = get_emotion(mode="reduced")
+    if globals.debug:
+        print("Current emotion:"+emotion)
+    if emotion=="neutral":
+        first_neutral(emotion)
+    else:
+        first_emotion(emotion)        
 
-def first_pos(): # TODO Can be merged into def first()
-    bsay("Hello! how are you today? You seem kind of happy, am i wrong?")
-    while True:
-        # Speak and listen
-        result = furhat.listen()
-        message_lower = result.message.lower()
-        if "yes" in message_lower:
-            mistake_pos()
-        elif "no" in message_lower:
-            second_pos()
-             
-def first_neg(): # TODO Can be merged into def first()
-    bsay("Hello! how are you today? You seem kind of sad, am i wrong?")
-    while True:
-        # Speak and listen
-        result = furhat.listen()
-        message_lower = result.message.lower()
-        if "yes" in message_lower:
-            mistake_neg()
-        elif "no" in message_lower:
-            second_neg()
-             
-def mistake_pos(): # TODO Can be merged into def mistake()
-    bsay("my mistake, are you sad?")
-    while True:
-        # Speak and listen
-        result = furhat.listen()
-        message_lower = result.message.lower()
-        if "yes" in message_lower:
-            mistake_pos()
-        elif "no" in message_lower:
-            first_neutral()
-             
-def mistake_neg(): # TODO Can be merged into def mistake()
-    bsay("my mistake, are you happy?")
-    while True:
-        # Speak and listen
-        result = furhat.listen()
-        message_lower = result.message.lower()
-        if "yes" in message_lower:
-            mistake_pos()
-        elif "no" in message_lower:
-            first_neutral()
-             
-def second_pos(): # TODO merge into the second()
-    bsay("Thats Great! Feeling happy is awesome. Can i offer you a drink?")
-    while True:
-        # Speak and listen
-        result = furhat.listen()
-        message_lower = result.message.lower()
-        if "yes" in message_lower:
-            drink_emotion()
-        elif "no" in message_lower:
-            no_drink()
-    
-def second_neg(): # TODO merge into the second()
-    bsay("We all have our ups and downs. Can i offer you a drink to perhaps make you feel better?")
-    while True:
-        # Speak and listen
-        result = furhat.listen()
-        message_lower = result.message.lower()
-        if "yes" in message_lower:
-            drink_emotion()
-        elif "no" in message_lower:
-            no_drink()
-    
-def first_neutral():
-    bsay("I understand. you are neither sad or happy. Thats ok. Can i offer you a drink to perhaps make you happy?")
-    while True:
-        # Speak and listen
-        result = furhat.listen()
-        message_lower = result.message.lower()
-        if "yes" in message_lower:
-            drink_emotion()
-        elif "no" in message_lower:
-            no_drink()
-    
-def no_drink(): # TODO this sounds a bit weird
-    bsay("What are you doing in a bar then? Either leave or have a drink. Are you sure you dont want to have a drink?")
-    while True:
-        # Speak and listen
-        result = furhat.listen()
-        message_lower = result.message.lower()
-        if "yes" in message_lower:
-            no_drink()
-        elif "no" in message_lower:
-            drink_emotion()
+def get_text(lines):
+    line = random.choice(lines)
+    return line+" "
 
-# TODO add a question how do you feel? Then customer can answer and we using NLTK we can see what was the emotion.
-# TODO add a response from persona, "Yeah, I can see" or "You're body language doesn't say so".  
-# TODO Ask if they wants to talk then -> OpenAI API -> "I dont want to talk anymmore" disables the API.
-
+def listen():
+    result = furhat.listen()
+    while result.message == 'NOMATCH':
+        result = furhat.listen()
+    return result.message.lower()
     
-def drink_emotion():
+def first_neutral(emotion):
+    # TODO: Persona should smile here.
+    bsay(get_text(GREATING)+" I see you are neither sad or happy. Thats ok. Can i offer you a drink to perhaps make you happy?")
+    message = listen()
+    if similar(message,"Yes, please"):
+        drink_emotion(emotion)
+    elif similar(message,"No I do not want a drink."):
+        no_drink()
+
+def first_emotion(emotion):
+    # TODO: Persona should smile here.
+    text = get_text(GREATING) + get_text(YOU_SEEM_KIND_OF) + emotion+" " + get_text(AINT_YOU)
+    bsay(text)
+    message = listen()
+    if similar(message,"Yes, I do.") or similar(message,f"Yes, I am {emotion}."):
+         second(emotion)
+    elif similar(message, "No, I don't.") or similar(message,f"No I am not {emotion}"):
+         emotion = mistake()
+         second(emotion)
+    else:
+        bsay("R2D2 sounds: BEEP BOOP BIBIBIBIPOB")
+
+def mistake():
+    bsay("My bad, how do you feel then?")
+    emotion = None
+    while emotion == None:
+        response = listen()
+        if similar(response, "I am happy."):
+            emotion = "happy"
+        elif similar(response,"I am sad."):
+            emotion = "sad"
+        elif similar(response,"I am angry."):
+            emotion = "angry"
+        elif similar(response,"I am neutral"):
+            emotion = "neutral"
+        else:
+            bsay("Could you repeat, I don't understand.")
+    return emotion
+     
+
+def second(emotion):
+    text = None
+    if emotion == "happy":# TODO: Add other emotions, angry, happy, neutral, sad 
+        text = get_text(GREAT) + get_text(HAPPY_IS_GOOD) + get_text(DRINK_OFFER)
+    elif emotion=="sad":
+        text = get_text(SYMPATHIZE_SAD) + get_text(DRINK_OFFER_SAD)
+    elif emotion=="angry":
+        text = get_text(SYMPATHIZE_ANGRY) + get_text(DRINK_OFFER_SAD)
+    elif emotion == "neutral":
+        first_neutral(emotion)
+        return
+    bsay(text)
+    message = listen()
+    if similar(message,"Yes."):
+        drink_emotion(emotion)
+    elif similar(message, "I don't want a drink."):
+        no_drink()
+             
+def no_drink():
+    text = get_text(WHY_IN_BAR) + get_text(DRINK_OFFER_2)
+    bsay(text)
+    # Speak and listen
+    message = listen()
+    if similar(message,"No, I do not want a drink."):
+        no_drink()
+    elif similar(message,"Yes, I want a drink."):
+        drink_emotion()
+    
+def drink_emotion(emotion):
     bsay("Okay, let me take a look at you and try to figure our how youre feeling currently....")
-    sleep(2.5)
-    drink_offer()
+    # Add animation look down to up
+    sleep(3)
+    drink_offer(emotion)
     
-def drink_offer():
-    #TODO: ADD A FUNCTION TO GET EMOTION IDK HOW WE ARE SUPPOSED TO GET IT IN THE FIRST PLACE SO I WAIT WITH IT.
-    emotion_seven = "placeholder"
+def drink_offer(emotion):# TODO we can change it to be more dramatic
     cocktails = ["Mojito", "Moscow Mule", "Aperol", "Martini", "Daiquiri", "Margarita", "Negroni"]
     cocktail = random.choice(cocktails)
-    bsay("Ill offer you our special ", emotion_seven, " ", cocktail, " That you will not find anywhere else. Would you like that?" )
-    while True:
+    bsay(f"Ill offer you our special {emotion} {cocktail} That you will not find anywhere else. Would you like that?" )
+    done = False
+    while not done:
         # Speak and listen
-        result = furhat.listen()
-        message_lower = result.message.lower()
-        if "yes" in message_lower:
-            drink_accepted()
-        elif "no" in message_lower:
-            drink_emotion()
+        message = listen()
+        if similar(message,"Yes, please."):
+            drink_accepted(emotion)
+            sleep(5)
+            text = "Another round?"
+            bsay(text)
+            message = listen()
+            if similar(message,"No, thank you."):
+                bsay("I hope you had a good time. See you!")
+                # TODO: persona should smile
+                done = True
+            # Assume any other response is yes.
+        elif similar(message,"No, I do not want it."):
+            drink_emotion(emotion)
+        
+        
+        
 
-def drink_accepted():
-    bsay("Great")
+def drink_accepted(emotion):
+    bsay(get_text(HAND_DRINK))
+    sleep(7)
+    # emotion detect 
+    emotion = get_emotion(mode="complete")
+    if emotion=="disgust":
+        # TODO: express sadness
+        bsay("I see you don't like it. Maybe it is not your style of the cocktail, I will try to make next one better.")
+    elif emotion=="surprise":
+        # TODO: express curiosity
+        bsay("I see surprise on your face is it good or bad surprise.")
+        message = listen()
+        if similar(message,"It is good surprise."):
+             bsay("Glad to hear.")
+        elif similar(message, "It is bad surprise."):
+            bsay("Sorry to hear, next cocktail will be better.")
+    else:    
+        bsay(get_text(LIKE_IT))
+        message = listen()
+        if similar(message, "Yes, I like it."):
+            bsay("Glad to hear it, enjoy it.")
+        elif similar(message, "No, I don't like it."):
+            bsay("Sorry, next one will be better.")
+        else:
+            bsay("Enjoy it.")
+    current_emotion = get_emotion(mode="valence")
+    sleep(2)
+    if current_emotion == "negative":
+        bsay("I see, the drink did not cheer you up. Maybe you want to talk?")
+    else:
+        bsay("Now that you have a drink. Maybe we can talk?")
+    message = listen()
+    if similar(message,"yes"):
+        free_conversation(current_emotion)
+        bsay("If you don't want to talk, it is fine.")
+    else:
+        bsay("Alright, no worries if you want to talk I am here.")
     
+def free_conversation(emotion):
+    context = f"Context: You are barman that just served me a drink and I am a customer. I am feeling {emotion}" \
+                "and would like to talk with you. Give only your lines, don't greet me."
+    client = OpenAI(api_key="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",)
+    chat_completion = client.chat.completions.create(messages=[
+        {"role": "user","content": f"{context} Please start the conversation.",}], model="gpt-3.5-turbo",)
+    text = chat_completion.choices[0].message.content
+    bsay(text)
+    response = listen()
+    while not similar(response,"I don't want to talk."):
+        chat_completion = client.chat.completions.create(messages=[
+        {"role": "user","content": response,}], model="gpt-3.5-turbo",)
+        bsay(chat_completion.choices[0].message.content)
+        response = listen()
+        
+def similar(sentance, meaning):
+    sentence_embeddings = model.encode([sentance, meaning])
+    similarity = util.pytorch_cos_sim(sentence_embeddings[0], sentence_embeddings[1])
+    if similarity.item() > 0.75:
+        return True
+    else:
+        return False
     
-    
-
 if __name__ == '__main__':
     main_tree()
     idle_animation()
