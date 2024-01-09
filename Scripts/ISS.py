@@ -250,7 +250,7 @@ def drink_offer(emotion):# TODO we can change it to be more dramatic
         # Speak and listen
         message = listen()
         if similar(message,"Yes, please."):
-            drink_accepted(emotion)
+            drink_accepted(emotion,cocktail)
             sleep(5)
             text = "Another round?"
             bsay(text)
@@ -266,7 +266,7 @@ def drink_offer(emotion):# TODO we can change it to be more dramatic
         
         
 
-def drink_accepted(emotion):
+def drink_accepted(emotion,cocktail):
     bsay(get_text(HAND_DRINK))
     sleep(7)
     # emotion detect 
@@ -299,13 +299,13 @@ def drink_accepted(emotion):
         bsay("Now that you have a drink. Maybe we can talk?")
     message = listen()
     if similar(message,"yes"):
-        free_conversation(current_emotion)
+        free_conversation(current_emotion,cocktail)
         bsay("If you don't want to talk, it is fine.")
     else:
         bsay("Alright, no worries if you want to talk I am here.")
     
-def free_conversation(emotion):
-    context = f"Context: You are barman that just served me a drink and I am a customer. I am feeling {emotion}" \
+def free_conversation(emotion,cocktail):
+    context = f"Context: You are barman that just served me a {cocktail} and I am a customer. I am feeling {emotion}" \
                 "and would like to talk with you. Give only your lines, don't greet me."
     client = OpenAI(api_key="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",)
     chat_completion = client.chat.completions.create(messages=[
