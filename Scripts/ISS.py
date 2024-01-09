@@ -164,16 +164,19 @@ def listen():
     result = furhat.listen()
     while result.message == 'NOMATCH':
         result = furhat.listen()
+        if globals.debug:
+            print(f"RECOGNIZER: {result}")
     return result.message.lower()
     
 def first_neutral(emotion):
     # TODO: Persona should smile here.
     bsay(get_text(GREATING)+" I see you are neither sad or happy. Thats ok. Can i offer you a drink to perhaps make you happy?")
     message = listen()
-    if similar(message,"Yes, please"):
+    if similar(message,"Yes, please") or  similar(message,"Yes, I would  like a drink") or similar(message, "Yes"):
         drink_emotion(emotion)
-    elif similar(message,"No I do not want a drink."):
+    elif similar(message,"No I do not want a drink.") or similar(message, "No"):
         no_drink()
+        
 
 def first_emotion(emotion):
     # TODO: Persona should smile here.
