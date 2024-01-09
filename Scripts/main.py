@@ -14,7 +14,7 @@ def faceDetection():
 
     warnings.filterwarnings("ignore") # Turn of warnings for thread
 
-    import stateDetection # import state detection to thread
+    from stateDetection import load_model # import state detection to thread
 
     # Set up path
     path = os. getcwd() # Make sure running from main folder
@@ -23,8 +23,8 @@ def faceDetection():
     detector = Detector(device="cuda") 
 
     #emotion = None # Initiates the emotion variable
-    modelName = "FER_2013_RF.joblib" #Change to change model
-    model = stateDetection.load_model(modelName)
+    modelName = "FER_2013_RandomForest.joblib" #Change to change model
+    model = load_model(modelName)
 
     # Start vidio capture
     cap = cv2.VideoCapture(0)
