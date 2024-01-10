@@ -79,6 +79,75 @@ def LOOK_BACK(speed):
     "class": "furhatos.gestures.Gesture"
     }
 
+def SMILE():
+    furhat.gesture(body={
+    "frames": [
+        {
+            "time": [
+                1.0
+            ],
+            "params": {
+                'SMILE_OPEN': 1.0
+            }
+        },
+        {
+            "time": [
+                4.0
+            ],
+            "params": {
+                "reset": True
+            }
+        }
+    ],
+    "class": "furhatos.gestures.Gesture"
+    })
+
+def SURPRISE():
+    furhat.gesture(body={
+    "frames": [
+        {
+            "time": [
+                1.0
+            ],
+            "params": {
+                'SURPRISE': 1.0
+            }
+        },
+        {
+            "time": [
+                3.0
+            ],
+            "params": {
+                "reset": True
+            }
+        }
+    ],
+    "class": "furhatos.gestures.Gesture"
+    })
+
+def ANGER():
+    furhat.gesture(body={
+    "frames": [
+        {
+            "time": [
+                1.0
+            ],
+            "params": {
+                'EXPR_ANGER': 1.0
+            }
+        },
+        {
+            "time": [
+                4.0
+            ],
+            "params": {
+                "reset": True
+            }
+        }
+    ],
+    "class": "furhatos.gestures.Gesture"
+    })
+
 # DO NOT CHANGE
 def LOOK_DOWN(speed=1):
     return {
@@ -171,6 +240,7 @@ def listen():
 def first_neutral(emotion):
     # TODO: Persona should smile here.
     bsay(get_text(GREATING)+" I see you are neither sad or happy. Thats ok. Can i offer you a drink to perhaps make you happy?")
+    SMILE()
     message = listen()
     if similar(message,"Yes, please") or  similar(message,"Yes, I would  like a drink") or similar(message, "Yes"):
         drink_emotion(emotion)
@@ -229,11 +299,13 @@ def second(emotion):
              
 def no_drink():
     text = get_text(WHY_IN_BAR) + get_text(DRINK_OFFER_2)
+    ANGER()
     bsay(text)
     # Speak and listen
     message = listen()
     if similar(message,"No, I do not want a drink."):
-        no_drink()
+        SURPRISE()
+        bsay("Okay, fair enough. See you.")
     elif similar(message,"Yes, I want a drink."):
         drink_emotion()
     
@@ -259,6 +331,8 @@ def drink_offer(emotion):# TODO we can change it to be more dramatic
             bsay(text)
             message = listen()
             if similar(message,"No, thank you."):
+                SURPRISE()
+                SMILE()
                 bsay("I hope you had a good time. See you!")
                 # TODO: persona should smile
                 done = True            # Assume any other response is yes.
