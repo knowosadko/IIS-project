@@ -126,10 +126,14 @@ Text resources for randomizing barman responses.
 
 
 # Resources
-Microsoft Azure Speech services, it works better than google, has lower WER (word error rate).
+**Microsoft Azure Speech services**, it works better than google, has lower WER (word error rate).
 
 Configuration in Web interface->Settings->Recognizer:
 
 Region: North-europe
 
 Key: \{API KEY in the report\}
+
+**Chat-GPT** used in ISS.py/free_conversation()
+
+Chat-GPT Key: \{API KEY in the report\}
