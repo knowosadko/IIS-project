@@ -115,6 +115,16 @@ Old script for detecting faces and predicting their emotion real time.
 ### stateDetection
 Script for training Machine Learning models.
 
+### ISS.py
+Main script for  the interactive subsystem
+
+### globals.py
+File made to store global variables.
+
+### texts.py
+Text resources for randomizing barman responses.
+
+
 # Resources
 Microsoft Azure Speech services, it works better than google, has lower WER (word error rate).
 
