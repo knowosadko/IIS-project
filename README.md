@@ -107,9 +107,6 @@ Old script for detecting faces and predicting their emotion real time.
 ### stateDetection
 Script for training Machine Learning models.
 
-### testnoface.py
-Testing script for what happens if no AUs are predicted 
-
 # Resources
 Microsoft Azure Speech services, it works better than google, has lower WER (word error rate).
 
