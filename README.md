@@ -5,6 +5,7 @@ A virtual robot that adapts its behavior based on the emotions of users.
 To run place the working directory in the ISS-PROJECT folder and run Scripts/main.py
 
 ```bash
+├──requirements.txt
 ├── Data
 |   ├── trainAUs.csv
 |   ├── trainLabels.csv
@@ -51,6 +52,9 @@ To run place the working directory in the ISS-PROJECT folder and run Scripts/mai
     └── texts.py
     
 ```
+
+## requirements.txt
+List of versions. Generated with "pip3 freeze > requirements.txt".
 
 ## Data
 Directory for storing data for training the models
