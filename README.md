@@ -122,4 +122,4 @@ Configuration in Web interface->Settings->Recognizer:
 
 Region: North-europe
 
-Key: <API KEY in the report>
+Key: \{API KEY in the report\}
