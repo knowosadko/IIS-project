@@ -44,8 +44,12 @@ To run place the working directory in the ISS-PROJECT folder and run Scripts/mai
     ├── main.py
     ├── crop_and_sort.py
     ├── face_detection.py
+    ├── ISS.py
+    ├── globals.py
     ├── stateDetection.py
-    └── testnoface.py
+    ├── testnoface.py
+    └── texts.py
+    
 ```
 
 ## Data
