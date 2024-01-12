@@ -130,23 +130,23 @@ def main():
     train, train_labels, val, val_labels, test, test_labels = splitTrainValTest(data, labels, 0.1, 0.2)
 
     # Tests multiple models
-    #main1(train, train_labels, val, val_labels, test, test_labels)
+    main1(train, train_labels, val, val_labels, test, test_labels)
 
     # Parameter tuning for SVC model
     # main2(train, train_labels, val, val_labels, test, test_labels)
 
     # Parameter tuning for Random Forest model
-    main3(train, train_labels, val, val_labels, test, test_labels)
+    #main3(train, train_labels, val, val_labels, test, test_labels)
 
 def main1(train, train_labels, val, val_labels, test, test_labels):
     # Tests multiple different models with default parameters
     # Example result on 2870 faces (validation set):
-    #   SVC Accuracy: 0.6506410256410257 Time: 0.0170443058013916 s
-    #   SG  Accuracy: 0.6538461538461539 Time: 0.0040607452392578125 s
-    #   Nearest neighbors  Accuracy: 0.5512820512820513 Time: 0.13010001182556152 s
-    #   tree Accuracy: 0.4935897435897436 Time: 0.002001047134399414 s
-    #   randomforest  Accuracy: 0.6666666666666666 Time: 0.006826639175415039 s
-    #   gausian Accuracy: 0.6602564102564102 Time: 0.0.2799561023712158 s
+    #   SVC Accuracy: 0.6217948717948718 Time: 0.02132892608642578 s
+    #   SG  Accuracy: 0.5673076923076923 Time: 0.011368513107299805 s
+    #   Nearest neighbors  Accuracy: 0.5641025641025641 Time: 0.13512468338012695 s
+    #   tree Accuracy: 0.5160256410256411 Time: 0.004774332046508789 s
+    #   randomforest  Accuracy: 0.6282051282051282 Time: 0.01510477066040039 s
+    #   gausian Accuracy: 0.5993589743589743 Time: 0.2807004451751709 s
 
     model1, model1_accuracy, model1_time = train_models(SVC(),train,train_labels,val,val_labels)
     print(f"Model: SVC \n Accuracy: {model1_accuracy} \n Time: {model1_time} s\n")

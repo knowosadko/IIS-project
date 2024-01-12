@@ -73,8 +73,6 @@ Evaluated on 2870 faces
 Test Accuracy: 0.6153846153846154
 Test Time: 0.00996708869934082
 
-### FER_2013_SVC2.joblib
-
 ### model2.joblib
 Random Forrest model ('bootstrap': False, 'criterion': 'log_loss', 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 300)
 Test Accuracy: 0.6580645161290323
